@@ -1,952 +1,2162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>GameHub · 74 apps</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      background-color: #f7f8fa;
-      color: #111827;
-      padding-bottom: 40px;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .app-wrap {
-      max-width: 480px;
-      margin: 0 auto;
-      background: #ffffff;
-      min-height: 100vh;
-      box-shadow: 0 0 30px rgba(0,0,0,0.03);
-      position: relative;
-      overflow-x: hidden;
-    }
-    /* HEADER */
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 30;
-      background: #ffffff;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #e5e7eb;
-      backdrop-filter: blur(4px);
-      background: rgba(255,255,255,0.92);
-    }
-    .header-title {
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: -0.3px;
-      color: #111827;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .header-title span {
-      background: #16a34a;
-      width: 8px;
-      height: 8px;
-      border-radius: 10px;
-      display: inline-block;
-    }
-    .menu-btn {
-      background: #f3f4f6;
-      border: none;
-      width: 44px;
-      height: 44px;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .menu-btn:active { background: #e5e7eb; }
-    .menu-btn svg { width: 24px; height: 24px; stroke: #1f2937; stroke-width: 2; fill: none; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>App & Game Directory</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: #F7F8FA;
+            color: #111827;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+        }
 
-    /* DRAWER */
-    .drawer-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.25);
-      z-index: 60;
-      opacity: 0;
-      pointer-events: none;
-      transition: 0.3s;
-    }
-    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-    .drawer {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 280px;
-      max-width: 80%;
-      height: 100%;
-      background: #ffffff;
-      z-index: 70;
-      box-shadow: -8px 0 30px rgba(0,0,0,0.06);
-      transition: 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
-      padding: 28px 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      border-left: 1px solid #f1f3f5;
-    }
-    .drawer.open { right: 0; }
-    .drawer-close {
-      align-self: flex-end;
-      background: #f3f4f6;
-      border: none;
-      width: 40px;
-      height: 40px;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .drawer-close svg { width: 22px; height: 22px; stroke: #1f2937; stroke-width: 2; }
-    .drawer-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      margin-top: 8px;
-    }
-    .drawer-nav a {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      font-size: 17px;
-      font-weight: 500;
-      color: #111827;
-      text-decoration: none;
-      padding: 8px 0;
-      border-bottom: 1px solid #f1f3f5;
-    }
-    .drawer-nav a svg { width: 22px; height: 22px; stroke: #4b5563; stroke-width: 1.8; fill: none; }
-    .drawer-nav a:active { color: #16a34a; }
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F1F1;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 8px;
+        }
 
-    /* PAGES */
-    .page {
-      display: none;
-      padding: 16px 16px 30px;
-      animation: fade 0.25s ease;
-    }
-    .page.active { display: block; }
-    @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
+        /* ===== CONTAINER ===== */
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
 
-    /* HOME GRID */
-    .home-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 6px;
-    }
-    .game-card {
-      background: #ffffff;
-      border-radius: 20px;
-      border: 1px solid #edf2f7;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-      padding: 16px 16px 14px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      transition: 0.15s;
-      position: relative;
-    }
-    .game-card:active { background: #fafbfc; transform: scale(0.99); }
-    .card-badge {
-      min-width: 28px;
-      height: 28px;
-      background: #f3f6fc;
-      color: #1f2937;
-      font-weight: 600;
-      font-size: 13px;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #e5e7eb;
-      flex-shrink: 0;
-    }
-    .card-img {
-      width: 64px;
-      height: 64px;
-      border-radius: 16px;
-      background: #f1f5f9;
-      object-fit: cover;
-      flex-shrink: 0;
-      border: 1px solid #f1f3f5;
-    }
-    .card-body {
-      flex: 1;
-      min-width: 0;
-    }
-    .card-name {
-      font-weight: 700;
-      font-size: 16px;
-      color: #111827;
-      margin-bottom: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 4px 8px;
-      font-size: 12.5px;
-      color: #374151;
-      margin: 2px 0 6px;
-    }
-    .card-tags svg {
-      width: 15px;
-      height: 15px;
-      stroke: #16a34a;
-      stroke-width: 2;
-      fill: none;
-      vertical-align: middle;
-      margin-right: 2px;
-    }
-    .card-bonus {
-      background: #f0fdf4;
-      padding: 2px 10px 2px 6px;
-      border-radius: 30px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-weight: 600;
-      color: #15803d;
-      font-size: 12px;
-      border: 1px solid #dcfce7;
-    }
-    .card-withdraw {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      font-size: 12px;
-      color: #6b7280;
-      background: #f9fafb;
-      padding: 2px 10px 2px 6px;
-      border-radius: 30px;
-    }
-    .card-dl-btn {
-      background: #16a34a;
-      border: none;
-      color: white;
-      font-weight: 600;
-      font-size: 13px;
-      padding: 8px 18px;
-      border-radius: 40px;
-      cursor: pointer;
-      transition: 0.15s;
-      box-shadow: 0 4px 8px rgba(22, 163, 74, 0.15);
-      white-space: nowrap;
-      flex-shrink: 0;
-      letter-spacing: 0.2px;
-    }
-    .card-dl-btn:active { background: #15803d; transform: scale(0.96); }
+        /* ===== HEADER ===== */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 12px 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: #16A34A;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .logo-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.3px;
+        }
+        .logo-text span {
+            color: #16A34A;
+        }
+        .menu-btn {
+            background: #F3F4F6;
+            border: none;
+            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 0;
+            flex-shrink: 0;
+        }
+        .menu-btn:active {
+            background: #E5E7EB;
+            transform: scale(0.94);
+        }
+        .menu-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke: #111827;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
 
-    /* DETAILS */
-    .detail-hero {
-      background: white;
-      border-radius: 28px;
-      padding: 20px 16px 22px;
-      border: 1px solid #edf2f7;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.02);
-      margin-bottom: 20px;
-      text-align: center;
-    }
-    .detail-hero img {
-      width: 110px;
-      height: 110px;
-      border-radius: 28px;
-      object-fit: cover;
-      border: 1px solid #eef2f6;
-      margin-bottom: 12px;
-      background: #f8fafc;
-    }
-    .detail-name {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .detail-meta {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px 18px;
-      margin: 14px 0 16px;
-      font-size: 15px;
-      color: #1f2937;
-    }
-    .detail-meta span {
-      background: #f1f5f9;
-      padding: 4px 14px;
-      border-radius: 40px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .detail-meta svg { width: 16px; height: 16px; stroke: #16a34a; stroke-width: 2; }
-    .detail-dl-btn {
-      background: #16a34a;
-      border: none;
-      color: white;
-      font-weight: 700;
-      font-size: 18px;
-      padding: 14px 30px;
-      border-radius: 60px;
-      cursor: pointer;
-      width: 100%;
-      max-width: 300px;
-      margin: 10px auto 0;
-      box-shadow: 0 10px 20px rgba(22, 163, 74, 0.2);
-      transition: 0.15s;
-      letter-spacing: 0.3px;
-    }
-    .detail-dl-btn:active { background: #15803d; transform: scale(0.97); }
-    .info-bag, .about-bag {
-      background: white;
-      border-radius: 24px;
-      padding: 18px 18px;
-      border: 1px solid #edf2f7;
-      margin: 20px 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.01);
-    }
-    .info-bag h3, .about-bag h3 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      margin-bottom: 12px;
-      color: #111827;
-    }
-    .info-bag h3 svg, .about-bag h3 svg { width: 22px; height: 22px; stroke: #16a34a; stroke-width: 2; }
-    .info-bag p, .about-bag p {
-      line-height: 1.65;
-      color: #374151;
-      font-size: 15px;
-    }
+        /* ===== SIDEBAR / DRAWER ===== */
+        .drawer-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -320px;
+            width: 300px;
+            max-width: 85vw;
+            height: 100%;
+            background: #FFFFFF;
+            z-index: 1000;
+            box-shadow: -8px 0 32px rgba(0, 0, 0, 0.12);
+            transition: right 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            padding: 24px 20px 32px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .drawer.open {
+            right: 0;
+        }
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #F3F4F6;
+        }
+        .drawer-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+        }
+        .drawer-close {
+            background: #F3F4F6;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            padding: 0;
+        }
+        .drawer-close:active {
+            background: #E5E7EB;
+            transform: scale(0.94);
+        }
+        .drawer-close svg {
+            width: 22px;
+            height: 22px;
+            stroke: #111827;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .drawer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+        .drawer-nav a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1F2937;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        .drawer-nav a:active {
+            background: #F3F4F6;
+        }
+        .drawer-nav a svg {
+            width: 22px;
+            height: 22px;
+            stroke: #6B7280;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+        .drawer-nav a.active {
+            background: #F0FDF4;
+            color: #16A34A;
+        }
+        .drawer-nav a.active svg {
+            stroke: #16A34A;
+        }
+        .drawer-footer {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #F3F4F6;
+            font-size: 12px;
+            color: #9CA3AF;
+            text-align: center;
+        }
 
-    /* RELATED */
-    .related-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 28px 0 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .related-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .related-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: white;
-      padding: 10px 12px 10px 10px;
-      border-radius: 18px;
-      border: 1px solid #edf2f7;
-      transition: 0.1s;
-    }
-    .related-card:active { background: #fafbfc; }
-    .related-card img {
-      width: 48px;
-      height: 48px;
-      border-radius: 14px;
-      object-fit: cover;
-      background: #f1f5f9;
-      flex-shrink: 0;
-    }
-    .related-info {
-      flex: 1;
-      font-size: 14px;
-    }
-    .related-info .rn { font-weight: 600; }
-    .related-info .rb { font-weight: 500; color: #15803d; font-size: 13px; display: flex; align-items: center; gap: 4px; }
-    .related-info .rw { color: #6b7280; font-size: 12px; }
-    .related-dl {
-      background: #eef2f6;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 40px;
-      font-weight: 600;
-      font-size: 13px;
-      color: #1f2937;
-      cursor: pointer;
-      transition: 0.1s;
-    }
-    .related-dl:active { background: #d1d9e6; }
+        /* ===== PAGE CONTAINER ===== */
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .page.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* ACCORDION + REVIEWS */
-    .best-section {
-      margin: 30px 0 20px;
-    }
-    .accordion-item {
-      background: white;
-      border-radius: 20px;
-      border: 1px solid #edf2f7;
-      margin-bottom: 10px;
-      overflow: hidden;
-    }
-    .accordion-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 18px;
-      font-weight: 600;
-      font-size: 16px;
-      cursor: pointer;
-      background: white;
-      transition: 0.1s;
-    }
-    .accordion-head:active { background: #f8fafc; }
-    .accordion-head svg { width: 20px; height: 20px; stroke: #6b7280; stroke-width: 2; transition: 0.25s; }
-    .accordion-body {
-      max-height: 0;
-      overflow: hidden;
-      padding: 0 18px;
-      color: #374151;
-      line-height: 1.6;
-      font-size: 15px;
-      transition: 0.3s ease;
-    }
-    .accordion-body.open { max-height: 400px; padding: 4px 18px 18px; }
-    .accordion-head.open svg { transform: rotate(180deg); }
+        /* ===== HOME PAGE ===== */
+        .home-header {
+            padding: 18px 0 6px;
+        }
+        .home-header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            letter-spacing: -0.5px;
+        }
+        .home-header p {
+            color: #6B7280;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 18px;
+            padding: 16px 0 32px;
+        }
+        @media (max-width: 480px) {
+            .app-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+                padding: 12px 0 24px;
+            }
+        }
+        @media (max-width: 360px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+                gap: 14px;
+            }
+        }
 
-    /* REVIEW CAROUSEL */
-    .review-section {
-      margin: 24px 0 10px;
-    }
-    .review-scroll {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      padding: 8px 4px 20px;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .review-scroll::-webkit-scrollbar { display: none; }
-    .review-card {
-      min-width: 220px;
-      max-width: 260px;
-      background: white;
-      border-radius: 24px;
-      padding: 16px 16px 18px;
-      border: 1px solid #edf2f7;
-      scroll-snap-align: start;
-      flex-shrink: 0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.01);
-    }
-    .review-stars {
-      display: flex;
-      gap: 3px;
-      margin-bottom: 8px;
-    }
-    .review-stars svg { width: 18px; height: 18px; fill: #f59e0b; stroke: none; }
-    .review-text {
-      font-size: 14px;
-      color: #1f2937;
-      line-height: 1.5;
-      margin: 6px 0 10px;
-      font-style: italic;
-    }
-    .reviewer {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 6px;
-    }
-    .reviewer-avatar {
-      width: 38px;
-      height: 38px;
-      background: #e5e7eb;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 16px;
-      color: #1f2937;
-      flex-shrink: 0;
-    }
-    .reviewer-info {
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .reviewer-info small {
-      font-weight: 400;
-      color: #6b7280;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 12px;
-    }
-    .reviewer-info small svg { width: 14px; height: 14px; stroke: #16a34a; fill: none; stroke-width: 2; }
+        /* ===== HOME CARD ===== */
+        .app-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            cursor: default;
+            position: relative;
+        }
+        .app-card:active {
+            transform: scale(0.98);
+        }
+        .app-card-top {
+            position: relative;
+            padding: 12px 12px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+        .card-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #9CA3AF;
+            background: #F3F4F6;
+            border-radius: 20px;
+            padding: 2px 10px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            line-height: 20px;
+            letter-spacing: 0.2px;
+        }
+        .card-img-wrap {
+            flex: 1;
+            min-width: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #F9FAFB;
+            aspect-ratio: 16 / 9;
+            position: relative;
+        }
+        .card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            background: #F3F4F6;
+        }
+        .card-body {
+            padding: 10px 12px 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .card-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 36px;
+        }
+        .card-bonus {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #6B7280;
+        }
+        .card-bonus svg {
+            width: 16px;
+            height: 16px;
+            stroke: #F59E0B;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .card-bonus strong {
+            color: #16A34A;
+            font-weight: 700;
+        }
+        .card-withdrawal {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #6B7280;
+        }
+        .card-withdrawal svg {
+            width: 16px;
+            height: 16px;
+            stroke: #6B7280;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .card-withdrawal strong {
+            color: #111827;
+            font-weight: 600;
+        }
+        .card-btn {
+            margin-top: 6px;
+            background: #16A34A;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card-btn:active {
+            background: #15803D;
+            transform: scale(0.96);
+        }
+        .card-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #FFFFFF;
+            stroke-width: 2.2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
 
-    /* FOOTER */
-    .footer {
-      margin-top: 40px;
-      padding: 24px 16px 16px;
-      border-top: 1px solid #edf2f7;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 20px;
-      justify-content: center;
-      font-size: 14px;
-      color: #4b5563;
-    }
-    .footer a {
-      color: #1f2937;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .footer a:active { color: #16a34a; }
-    .footer-note {
-      width: 100%;
-      text-align: center;
-      font-size: 12px;
-      color: #9ca3af;
-      margin-top: 6px;
-    }
+        /* ===== DETAILS PAGE ===== */
+        .details-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 0 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6B7280;
+            cursor: pointer;
+            border: none;
+            background: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .details-back:active {
+            color: #111827;
+        }
+        .details-back svg {
+            width: 20px;
+            height: 20px;
+            stroke: #6B7280;
+            stroke-width: 2;
+            fill: none;
+        }
+        .details-hero {
+            background: #FFFFFF;
+            border-radius: 20px;
+            border: 1px solid #E5E7EB;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+        .details-hero-top {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .details-img {
+            width: 120px;
+            min-width: 120px;
+            height: 80px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #F9FAFB;
+            flex-shrink: 0;
+        }
+        .details-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .details-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .details-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.2;
+        }
+        .details-bonus-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+        .details-bonus-row svg {
+            width: 18px;
+            height: 18px;
+            stroke: #F59E0B;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .details-bonus-row strong {
+            color: #16A34A;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        .details-withdrawal-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 4px;
+            font-size: 14px;
+            color: #6B7280;
+        }
+        .details-withdrawal-row svg {
+            width: 18px;
+            height: 18px;
+            stroke: #6B7280;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .details-withdrawal-row strong {
+            color: #111827;
+            font-weight: 600;
+        }
+        .details-stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 20px;
+            margin-top: 10px;
+            padding-top: 12px;
+            border-top: 1px solid #F3F4F6;
+        }
+        .details-stat {
+            font-size: 13px;
+            color: #6B7280;
+        }
+        .details-stat strong {
+            color: #111827;
+            font-weight: 600;
+        }
+        .details-download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 20px;
+            background: #16A34A;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 700;
+            color: #FFFFFF;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 16px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .details-download-btn:active {
+            background: #15803D;
+            transform: scale(0.97);
+        }
+        .details-download-btn svg {
+            width: 22px;
+            height: 22px;
+            stroke: #FFFFFF;
+            stroke-width: 2.2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
 
-    /* UTILITY */
-    .mt-1 { margin-top: 8px; }
-    .mb-1 { margin-bottom: 8px; }
-    .flex-center { display: flex; align-items: center; gap: 4px; }
-    .gap-1 { gap: 4px; }
+        /* ===== INFO BAG ===== */
+        .info-bag {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            padding: 18px 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .info-bag h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-bag h3 svg {
+            width: 20px;
+            height: 20px;
+            stroke: #16A34A;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .info-bag p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #4B5563;
+        }
 
-    /* RESPONSIVE */
-    @media (min-width: 600px) {
-      .app-wrap { max-width: 600px; }
-      .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-      .game-card { flex-direction: column; align-items: flex-start; }
-      .card-img { width: 100%; height: 140px; object-fit: cover; }
-      .card-body { width: 100%; }
-      .card-dl-btn { width: 100%; justify-content: center; }
-    }
-    @media (min-width: 900px) {
-      .app-wrap { max-width: 860px; }
-      .home-grid { grid-template-columns: 1fr 1fr 1fr; }
-    }
-    /* page inner */
-    .page-title {
-      font-size: 24px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .page-text {
-      line-height: 1.7;
-      color: #374151;
-    }
-  </style>
+        /* ===== RELATED SECTION ===== */
+        .related-section {
+            margin: 20px 0 16px;
+        }
+        .related-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 14px;
+        }
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+        @media (max-width: 480px) {
+            .related-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+        @media (max-width: 360px) {
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .related-card {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E5E7EB;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            transition: transform 0.15s;
+        }
+        .related-card:active {
+            transform: scale(0.97);
+        }
+        .related-card-img {
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #F9FAFB;
+        }
+        .related-card-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .related-card-body {
+            padding: 8px 10px 10px;
+        }
+        .related-card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            min-height: 32px;
+        }
+        .related-card-bonus {
+            font-size: 12px;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        .related-card-bonus svg {
+            width: 14px;
+            height: 14px;
+            stroke: #F59E0B;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .related-card-bonus strong {
+            color: #16A34A;
+            font-weight: 700;
+        }
+        .related-card-btn {
+            width: 100%;
+            padding: 6px 0;
+            margin-top: 4px;
+            background: #F0FDF4;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #16A34A;
+            cursor: pointer;
+            transition: background 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .related-card-btn:active {
+            background: #DCFCE7;
+        }
+
+        /* ===== BEST INFO ACCORDION ===== */
+        .best-info-section {
+            margin: 20px 0 16px;
+        }
+        .best-info-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 14px;
+        }
+        .accordion-item {
+            background: #FFFFFF;
+            border-radius: 14px;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+            transition: box-shadow 0.2s;
+        }
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            gap: 12px;
+        }
+        .accordion-header:active {
+            background: #F9FAFB;
+        }
+        .accordion-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .accordion-header-left svg {
+            width: 20px;
+            height: 20px;
+            stroke: #16A34A;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .accordion-header-left span {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+        }
+        .accordion-icon {
+            width: 24px;
+            height: 24px;
+            stroke: #6B7280;
+            stroke-width: 2;
+            fill: none;
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+        .accordion-item.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s;
+            padding: 0 16px;
+        }
+        .accordion-item.open .accordion-body {
+            max-height: 800px;
+            padding: 0 16px 16px;
+        }
+        .accordion-body p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #4B5563;
+        }
+
+        /* ===== REVIEWS ===== */
+        .reviews-section {
+            margin: 20px 0 32px;
+        }
+        .reviews-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 14px;
+        }
+        .reviews-scroll {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 4px 0 12px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+        .reviews-scroll::-webkit-scrollbar {
+            height: 3px;
+        }
+        .reviews-scroll::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 8px;
+        }
+        .review-card {
+            min-width: 260px;
+            max-width: 280px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            padding: 18px 16px 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+        }
+        @media (max-width: 480px) {
+            .review-card {
+                min-width: 220px;
+                max-width: 260px;
+            }
+        }
+        .review-stars {
+            display: flex;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+        .review-stars svg {
+            width: 18px;
+            height: 18px;
+            fill: #F59E0B;
+            stroke: #F59E0B;
+            stroke-width: 0.5;
+        }
+        .review-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #1F2937;
+            flex: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .review-divider {
+            height: 1px;
+            background: #F3F4F6;
+            margin: 10px 0;
+        }
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .review-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #16A34A;
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .review-author-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .review-author-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+        }
+        .review-verified {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: #16A34A;
+            font-weight: 500;
+        }
+        .review-verified svg {
+            width: 14px;
+            height: 14px;
+            stroke: #16A34A;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        /* ===== STATIC PAGES (About, Contact, etc.) ===== */
+        .static-page {
+            padding: 20px 0 32px;
+        }
+        .static-page h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+        .static-page .sub {
+            color: #6B7280;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+        .static-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            border: 1px solid #E5E7EB;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .static-card h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin: 16px 0 6px;
+        }
+        .static-card h2:first-child {
+            margin-top: 0;
+        }
+        .static-card p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #4B5563;
+            margin-bottom: 12px;
+        }
+        .static-card ul {
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        .static-card ul li {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #4B5563;
+        }
+
+        /* ===== FOOTER ===== */
+        .site-footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            padding: 24px 0 20px;
+            margin-top: 8px;
+        }
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 20px;
+            margin-bottom: 12px;
+        }
+        .footer-links a {
+            font-size: 13px;
+            color: #6B7280;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .footer-links a:active {
+            color: #111827;
+        }
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            color: #9CA3AF;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* ===== RESPONSIVE TWEAKS ===== */
+        @media (max-width: 480px) {
+            .details-hero-top {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            .details-img {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 16/9;
+                min-width: unset;
+                max-width: 280px;
+            }
+            .details-info {
+                text-align: center;
+            }
+            .details-bonus-row,
+            .details-withdrawal-row {
+                justify-content: center;
+            }
+            .details-stats {
+                justify-content: center;
+            }
+            .details-name {
+                font-size: 18px;
+            }
+            .home-header h1 {
+                font-size: 20px;
+            }
+            .logo-text {
+                font-size: 16px;
+            }
+            .drawer {
+                width: 280px;
+                max-width: 80vw;
+            }
+        }
+        @media (max-width: 380px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+            .review-card {
+                min-width: 200px;
+                max-width: 240px;
+            }
+        }
+        @media (min-width: 768px) {
+            .app-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 22px;
+            }
+            .related-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                gap: 18px;
+            }
+            .review-card {
+                min-width: 280px;
+                max-width: 320px;
+            }
+            .details-img {
+                width: 160px;
+                min-width: 160px;
+                height: 106px;
+            }
+        }
+
+        /* ===== LOADING PLACEHOLDER ===== */
+        .img-placeholder {
+            background: linear-gradient(135deg, #F3F4F6 30%, #E5E7EB 60%, #F3F4F6 90%);
+            background-size: 200% 200%;
+            animation: shimmer 1.8s ease-in-out infinite;
+            border-radius: 12px;
+            width: 100%;
+            height: 100%;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="app-wrap" id="app">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-title"><span></span> GameHub</div>
-    <button class="menu-btn" id="menuOpen" aria-label="Open menu">
-      <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
-    </button>
-  </header>
-
-  <!-- DRAWER -->
-  <div class="drawer-overlay" id="drawerOverlay"></div>
-  <div class="drawer" id="drawer">
-    <button class="drawer-close" id="menuClose"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    <div class="drawer-nav">
-      <a href="#" data-page="home"><svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg> Home</a>
-      <a href="#" data-page="about"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About</a>
-      <a href="#" data-page="contact"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Contact</a>
-      <a href="#" data-page="disclaimer"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> Disclaimer</a>
-      <a href="#" data-page="privacy"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> Privacy</a>
-    </div>
-  </div>
-
-  <!-- HOME PAGE -->
-  <div class="page active" id="page-home">
-    <div class="home-grid" id="homeGrid"></div>
-  </div>
-
-  <!-- DETAILS PAGE (dynamic) -->
-  <div class="page" id="page-detail"></div>
-
-  <!-- STATIC PAGES -->
-  <div class="page" id="page-about">
-    <h2 class="page-title">About</h2>
-    <div class="page-text">
-      <p>GameHub is a premium directory of 74 original apps and games. We provide clear access to verified APK downloads and game information. Our platform helps users discover new gaming experiences with transparent details about bonuses, withdrawals, and app features.</p><br>
-      <p>All listed apps are sourced from original providers. We focus on accurate presentation, easy navigation, and a clean user interface. Every game card includes key details like sign-up bonus, minimum withdrawal, and a direct download button.</p><br>
-      <p>This website is built for mobile-first use, compatible with Android WebView and all modern browsers. Explore, compare, and find your next favorite game.</p>
-    </div>
-  </div>
-
-  <div class="page" id="page-contact">
-    <h2 class="page-title">Contact</h2>
-    <div class="page-text">
-      <p>For general inquiries or support, please use the following channels:</p><br>
-      <p><strong>General Support:</strong> We recommend reaching out through the official support channels provided within each app or game.</p>
-      <p><strong>Website Feedback:</strong> If you have feedback about the directory or encounter any issues, please contact us via the feedback form available on our main platform.</p><br>
-      <p>We strive to respond to all queries within 48 hours. For urgent matters, please refer to the app's internal support.</p>
-    </div>
-  </div>
-
-  <div class="page" id="page-disclaimer">
-    <h2 class="page-title">Disclaimer</h2>
-    <div class="page-text">
-      <p>GameHub is a directory platform that lists third-party applications and games. We do not host or distribute any APK files. All download links are provided by the original developers.</p><br>
-      <p>We do not guarantee the accuracy, completeness, or reliability of any information displayed. Users are responsible for verifying the authenticity of the apps they download and for complying with local laws.</p><br>
-      <p>Real-money gaming involves financial risk. Please participate responsibly. GameHub does not endorse or guarantee any winnings, withdrawals, or bonuses. All bonus amounts and withdrawal information are for informational purposes only.</p>
-    </div>
-  </div>
-
-  <div class="page" id="page-privacy">
-    <h2 class="page-title">Privacy Policy</h2>
-    <div class="page-text">
-      <p>We value your privacy. This website does not collect personal data unless voluntarily provided via contact forms. We may use local storage for user preferences.</p><br>
-      <p>Third-party links and apps have their own privacy policies. We recommend reviewing them before downloading or using any application.</p><br>
-      <p>We do not share, sell, or rent any user information. If you have any concerns, please contact us through the contact page.</p>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer">
-    <a href="#" data-page="home">Home</a>
-    <a href="#" data-page="about">About</a>
-    <a href="#" data-page="contact">Contact</a>
-    <a href="#" data-page="disclaimer">Disclaimer</a>
-    <a href="#" data-page="privacy">Privacy</a>
-    <div class="footer-note">© GameHub · 74 original apps · play responsibly</div>
-  </div>
-</div>
-
-<script>
-  (function(){
-    // ----- EXACT 74 ORIGINAL DATA (names, images, bonuses, links) -----
-    const APPS = [
-      { id:1, name:"YONO NEW APP", image:"https://i.ibb.co/0RZPw4wH/Screenshot-20260814-093236.jpg", bonus:"₹100", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:2, name:"567 SLOTS", image:"https://i.ibb.co/QWVBtNG/Screenshot-20260814-045334.jpg", bonus:"₹150", link:"https://join567slots0.com/?code=4NYF487URJ6&t=1781505684" },
-      { id:3, name:"SAGA SLOTS", image:"https://i.ibb.co/k20yYCYZ/Screenshot-20260814-045747.jpg", bonus:"₹200", link:"https://www.sagaslots5.com/?code=0QHJSERZYMV&t=1781505813" },
-      { id:4, name:"JAIHO 91", image:"https://i.ibb.co/bnQfcCV/Screenshot-20260814-045233.jpg", bonus:"₹150", link:"https://jaiho91bonus.vip/?code=C42T99ZQHAT&t=1781506067" },
-      { id:5, name:"RUMMY LUDO", image:"https://i.ibb.co/JR326qDL/Screenshot-20260814-050655.jpg", bonus:"₹100", link:"https://rummyludoapp37.com/" },
-      { id:6, name:"ABC RUMMY", image:"https://i.ibb.co/CKxFgdKB/Screenshot-20260814-050911.jpg", bonus:"₹100", link:"https://d34i569g8ztoql.cloudfront.net/abcrummy_MeApp.apk" },
-      { id:7, name:"RUMMY 91", image:"https://i.ibb.co/ymwjhMwy/Screenshot-20260814-051214.jpg", bonus:"₹200", link:"https://d16sfv4ssrmnvt.cloudfront.net/rummy91_AGENT.apk" },
-      { id:8, name:"LOVE RUMMY", image:"https://i.ibb.co/FkzpZCrk/Screenshot-20260814-051426.jpg", bonus:"₹150", link:"https://d34i569g8ztoql.cloudfront.net/loverummy_App.apk" },
-      { id:9, name:"SPIN CRUSH", image:"https://i.ibb.co/M5cLBLc1/Screenshot-20260814-034836.jpg", bonus:"₹100", link:"https://d292swwe9zki3u.cloudfront.net/spincrush_freecash.apk" },
-      { id:10, name:"TOP RUMMY", image:"https://i.ibb.co/9mwHZbCp/Screenshot-20260814-051751.jpg", bonus:"₹100", link:"https://th7.my/BY1JWS/3gvute0" },
-      { id:11, name:"Hello Rummy", image:"https://i.ibb.co/ksXtjTVp/Screenshot-20260814-052023.jpg", bonus:"₹100", link:"https://www.earntp.com/gold/jm9n7r" },
-      { id:12, name:"RUMMY 365", image:"https://i.ibb.co/jvpGswXD/Screenshot-20260814-052223.jpg", bonus:"₹150", link:"https://join567slots0.com/?code=4NYF487URJ6&t=1781505684" },
-      { id:13, name:"TEEN PATTI GOLD", image:"https://i.ibb.co/m5sHK3ys/Screenshot-20260814-052420.jpg", bonus:"₹100", link:"https://www.earntp.com/gold/jm9n7r" },
-      { id:14, name:"TEEN PATTI MASTER", image:"https://i.ibb.co/cXkXTDPR/Screenshot-20260814-052628.jpg", bonus:"₹150", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:15, name:"YONO RUMMY", image:"https://i.ibb.co/b5THXzC7/Screenshot-20260814-040920.jpg", bonus:"₹100", link:"https://yonorummy043.com/?code=VIPYQC5EE9X&t=1781107758" },
-      { id:16, name:"SLOTS WINNER", image:"https://i.ibb.co/wNT5cZ1k/Screenshot-20260814-041656.jpg", bonus:"₹200", link:"https://slotswinneri.com/?code=PGVC6CBNF53&t=1781107393" },
-      { id:17, name:"GOOD SLOTS", image:"https://i.ibb.co/Hpk3dp9X/Screenshot-20260814-053030.jpg", bonus:"₹100", link:"https://7sharegoodslots.vip?pid=320806209&channel=2010001&t=pdd2&pkg=com.1" },
-      { id:18, name:"Diwa Slot", image:"https://i.ibb.co/2zv2Nyy/Screenshot-20260814-053408.jpg", bonus:"₹150", link:"https://sharediwaslot1.vip?pid=483455673&channel=2010002&t=pdd2&pkg=com.diwaslotwhl.app" },
-      { id:19, name:"GOGO RUMMY", image:"https://i.ibb.co/RTwyQ4tF/Screenshot-20260814-053625.jpg", bonus:"₹100", link:"https://www.gogorummyagent.com/?code=V4UTQA2VYMQ&t=1781196694" },
-      { id:20, name:"JOY RUMMY", image:"https://i.ibb.co/SCc42Cp/Screenshot-20260814-053827.jpg", bonus:"₹150", link:"https://www.joyrummymax.com/?code=J5KFTAWJ9X5&t=1781198100" },
-      { id:21, name:"SPIN GOLD", image:"https://i.ibb.co/0yd0J3dy/Screenshot-20260814-030656.jpg", bonus:"₹100", link:"https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828" },
-      { id:22, name:"BINGO 101", image:"https://i.ibb.co/Xk2wP9Nk/Screenshot-20260814-034121.jpg", bonus:"₹150", link:"https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828" },
-      { id:23, name:"YES SPIN", image:"https://i.ibb.co/60hFLZzw/Screenshot-20260814-054324.jpg", bonus:"₹100", link:"https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907" },
-      { id:24, name:"YONO ARCADE", image:"https://i.ibb.co/R4hkwzbW/Screenshot-20260814-040720.jpg", bonus:"₹100", link:"https://yonoarcadeapk9.com/?code=96LNEL9FQXZ&t=1781199006" },
-      { id:25, name:"SVIP 777", image:"https://i.ibb.co/MyQvt1R2/Screenshot-20260814-054554.jpg", bonus:"₹150", link:"https://www.svip777.life?pid=297924008&channel=2050001&t=pdd2&pkg=com.svip777.h5" },
-      { id:26, name:"OK RUMMY", image:"https://i.ibb.co/xKhB5qzg/Screenshot-20260814-054736.jpg", bonus:"₹100", link:"https://www.okrummy22.com/?code=H2GU92WUXXA&t=1781199220" },
-      { id:27, name:"HINDI 777", image:"https://i.ibb.co/pvtCPtTT/Screenshot-20260814-055304.jpg", bonus:"₹100", link:"https://www.hindi777agent5.com/?code=7LFFR8WPHEG&t=1781199307" },
-      { id:28, name:"BET 213", image:"https://i.ibb.co/6c3k7wdG/Screenshot-20260814-055545.jpg", bonus:"₹150", link:"https://www.bet213.rocks/?code=2QTKPV4BYDH&t=1781199576" },
-      { id:29, name:"BOSS RUMMY", image:"https://i.ibb.co/jvwscPDf/Screenshot-20260814-055812.jpg", bonus:"₹100", link:"https://www.bossrummyy.com/?code=LSHTVUZE1NR&t=1781429504" },
-      { id:30, name:"YONO 777", image:"https://i.ibb.co/v4G1fQtr/Screenshot-20260814-060203.jpg", bonus:"₹150", link:"https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388" },
-      { id:31, name:"Diwa VIP", image:"https://i.ibb.co/6RQ2tGnw/Screenshot-20260814-060417.jpg", bonus:"₹100", link:"https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388" },
-      { id:32, name:"Diwa 777", image:"https://i.ibb.co/hFNKBdvq/Screenshot-20260814-060707.jpg", bonus:"₹100", link:"https://sharediwa7771.top?pid=287747863&channel=2010001&t=pdd2&pkg=com.diwa777.app" },
-      { id:33, name:"YONO GAMES", image:"https://i.ibb.co/Gf0fxYQ4/Screenshot-20260814-040510.jpg", bonus:"₹150", link:"https://yonogamesm.com/?code=LHS49AEHVMR&t=1784314209" },
-      { id:34, name:"INR RUMMY", image:"https://i.ibb.co/hJpHMvPg/Screenshot-20260814-061018.jpg", bonus:"₹100", link:"https://inrrummy.club/?code=JMQBV8TAPD7&t=1784298106" },
-      { id:35, name:"MBM BET", image:"https://i.ibb.co/0j53Gb5W/Screenshot-20260814-042359.jpg", bonus:"₹150", link:"https://www.mbmbet3.com/?code=GD3H3VA6YK5&t=1784297830" },
-      { id:36, name:"GOA SPIN", image:"https://i.ibb.co/jkQ5z96x/Screenshot-20260814-033551.jpg", bonus:"₹100", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:37, name:"777 GAME", image:"https://i.ibb.co/tMJ0L7L8/1786658176260.jpg", bonus:"₹100", link:"https://t.me/yonogamestite" },
-      { id:38, name:"TEEN PATTI", image:"https://i.ibb.co/fzmMFV0F/Screenshot-20260814-061532.jpg", bonus:"₹150", link:"https://www.earntp.com/gold/jm9n7r" },
-      { id:39, name:"All YONO GAMES", image:"https://i.ibb.co/cKc56vJj/Screenshot-20260814-061719.jpg", bonus:"₹100", link:"https://www.earntp.com/gold/jm9n7r" },
-      { id:40, name:"NEW YONO GAMES", image:"https://i.ibb.co/R4hkwzbW/Screenshot-20260814-062237.jpg", bonus:"₹100", link:"https://t.me/yonogamestite" },
-      { id:41, name:"YONO APPS", image:"https://i.ibb.co/DfQgSYrP/Screenshot-20260814-061950.jpg", bonus:"₹150", link:"https://t.me/yonogamestite" },
-      { id:42, name:"SPIN WINNER", image:"https://i.ibb.co/PZNRbCwk/Screenshot-20260814-034801.jpg", bonus:"₹100", link:"https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907" },
-      { id:43, name:"YONO All GAMES", image:"https://i.ibb.co/TMJwF88r/Screenshot-20260814-031654.jpg", bonus:"₹150", link:"https://diwavipshare.cc?pid=428256719&channel=2050001&t=pdd2&pkg=com.diwavip.h5" },
-      { id:44, name:"SPIN LUCKY", image:"https://i.ibb.co/Q7YCZLWP/Screenshot-20260814-041943.jpg", bonus:"₹100", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:45, name:"MAX RUMMY", image:"https://i.ibb.co/xKH8Zz6C/Screenshot-20260814-032014.jpg", bonus:"₹150", link:"https://www.maxrummy66.com/?code=QUMWTJCMZ5N&t=1784912540" },
-      { id:46, name:"RANI SLOTS", image:"https://i.ibb.co/jZMq58Pc/Screenshot-20260814-063312.jpg", bonus:"₹100", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:47, name:"1GO PLUS", image:"https://i.ibb.co/PzV7FRHT/Screenshot-20260814-063537.jpg", bonus:"₹100", link:"https://1go.plus/4h91q" },
-      { id:48, name:"RUMMY ULTRA", image:"https://i.ibb.co/pjWGb0ty/Screenshot-20260814-034858.jpg", bonus:"₹150", link:"https://www.rummyultraa.com/?dl=5hrw1p" },
-      { id:49, name:"789 JACKPOTS", image:"https://i.ibb.co/5WV6Z60y/Screenshot-20260814-063848.jpg", bonus:"₹100", link:"https://join789jackpots1.com/?code=XYUGRMBA44Y&t=1784907944" },
-      { id:50, name:"JAIHO WIN", image:"https://i.ibb.co/qFmG8b9q/Screenshot-20260814-041444.jpg", bonus:"₹150", link:"https://www.jaihowin12.com/?code=1XNCQVU3XA5&t=1784914695" },
-      { id:51, name:"SLOTS SPIN", image:"https://i.ibb.co/0pSskjBY/Screenshot-20260814-032904.jpg", bonus:"₹100", link:"https://slotsspinq.com/?code=XJB6LEBYG8R&t=1784908638" },
-      { id:52, name:"NETA VIP", image:"https://i.ibb.co/yBKhXW7S/Screenshot-20260814-032933.jpg", bonus:"₹150", link:"https://neta3.vip/?code=DR0V69R7BGJ&t=1784915088" },
-      { id:53, name:"JAIHO 777 VIP", image:"https://i.ibb.co/xVcCbWY/1786669966384.jpg", bonus:"₹100", link:"https://jaiho777agent.com?code=98X2D8Y3QGD&t=1784915217" },
-      { id:54, name:"DHAN GAME", image:"https://i.ibb.co/JRshnS3z/Screenshot-20260814-033641.jpg", bonus:"₹150", link:"https://www.dhanwin365.com/?code=47TWH18LDKB&t=1784915487" },
-      { id:55, name:"DIWA GAME", image:"https://i.ibb.co/zVvgvPpL/Screenshot-20260814-040014.jpg", bonus:"₹100", link:"https://diwagameshare.club?pid=345550936&channel=2010002&t=pdd2&pkg=com.diwagamewhx.app" },
-      { id:56, name:"BET 54 GAMES", image:"https://i.ibb.co/zWrDwLPt/Screenshot-20260814-033239.jpg", bonus:"₹100", link:"https://www.earntp.com/gold/jm9n7r" },
-      { id:57, name:"ALL YONO APPS", image:"https://i.ibb.co/Qq9Zn7f/Screenshot-20260814-064907.jpg", bonus:"₹150", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:58, name:"T989 APPS", image:"https://i.ibb.co/bR8bB9qn/Screenshot-20260814-041927.jpg", bonus:"₹100", link:"https://www.earntp.com/gold/jm9n7r" },
-      { id:59, name:"765 CLUB", image:"https://i.ibb.co/LDF3sXTx/Screenshot-20260814-065302.jpg", bonus:"₹150", link:"https://765club.com/?id=637056077" },
-      { id:60, name:"MKM BET APK", image:"https://i.ibb.co/wZxK5XGr/Screenshot-20260814-032720.jpg", bonus:"₹100", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:61, name:"YN 777", image:"https://i.ibb.co/v6GbHJ95/Screenshot-20260814-040445.jpg", bonus:"₹150", link:"https://www.y729.com/?code=4SWD98JQ8LU&t=1785588919" },
-      { id:62, name:"SPIN 777", image:"https://i.ibb.co/ccGr69gJ/Screenshot-20260814-033520.jpg", bonus:"₹100", link:"https://spin777cc.com/?code=7V9ZG91PA4R&t=1785589035" },
-      { id:63, name:"RUMMY 888", image:"https://i.ibb.co/bMgzZNPd/Screenshot-20260814-033315.jpg", bonus:"₹150", link:"https://rummy888vip43.com/?code=7WTEEW87DPM&t=1785589166" },
-      { id:64, name:"RUMMY 77", image:"https://i.ibb.co/BXKxwDX/Screenshot-20260814-035041.jpg", bonus:"₹100", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:65, name:"MQM BET", image:"https://i.ibb.co/nqbdMSST/Screenshot-20260814-035011.jpg", bonus:"₹150", link:"https://4mqmshare.vip?pid=486385025&channel=2010001&pkg=com.mqm.bet" },
-      { id:66, name:"MAHA GAMES", image:"https://i.ibb.co/nNmMgR25/Screenshot-20260814-034026.jpg", bonus:"₹100", link:"https://good-mahagames.com/?code=J24U9DHRWR8&t=1785589525" },
-      { id:67, name:"IND RUMMY", image:"https://i.ibb.co/BKSZbZMt/Screenshot-20260814-091502.jpg", bonus:"₹150", link:"https://www.earntp.com/m/jm9n7r" },
-      { id:68, name:"Hi RUMMY", image:"https://i.ibb.co/27r99T47/Screenshot-20260814-091836.jpg", bonus:"₹100", link:"https://joinhirummy.net/?code=RX35XQBCPC9&t=1785590074" },
-      { id:69, name:"JAIHO SPIN", image:"https://i.ibb.co/rfc5rdpv/Screenshot-20260814-041105.jpg", bonus:"₹150", link:"https://18jaihospinpro.com/?code=U3VDD22Q&t=1785590326" },
-      { id:70, name:"JAIHO RUMMY", image:"https://i.ibb.co/TD7mQ4Qw/Screenshot-20260814-035539.jpg", bonus:"₹100", link:"https://jaihoclud.com/?code=E744HJRF6W7&t=1785590487" },
-      { id:71, name:"YONO SLOTS", image:"https://i.ibb.co/TDF7VJ1w/Screenshot-20260814-092416.jpg", bonus:"₹150", link:"https://www.yonoslotsm.com/?code=KU899FV2GFY&t=1785590595" },
-      { id:72, name:"Diwa Win", image:"https://i.ibb.co/XfXsfDrh/Screenshot-20260814-032430.jpg", bonus:"₹100", link:"https://diwawinshare.tech?pid=528544053&channel=2010002&pkg=com.diwawin002.app" },
-      { id:73, name:"RUMBLE RUMMY", image:"https://i.ibb.co/S7VgC8Cr/Screenshot-20260814-035804.jpg", bonus:"₹150", link:"https://www.rumblerummy111.vip/?code=VX9H1GEM5EL&t=1785590916" },
-      { id:74, name:"YONO VIP", image:"https://i.ibb.co/zTH4HqXT/Screenshot-20260814-041418.jpg", bonus:"₹100", link:"https://uonovipfast.com/?code=3crTKB9H7ND&t=1785591034" }
-    ];
-
-    // ----- Unique generated extras for details (downloads, size, votes) -----
-    function getExtras(id){
-      const downloads = [45309,52841,68220,91740,33120,47250,61230,78340,22150,39480,55120,67400,82910,33670,48930,70920,26840,41580,59210,73150,18930,45780,62310,81420,29350,50670,65780,90120,37210,53840,69450,82130,25890,41760,63980,75210,31180,48850,67420,80360,34970,52910,68340,92150,28760,46210,61870,79530,33480,55920,71480,84260,39620,57140,72890,86910,30280,47930,63520,81070,36140,54820,70930,89320,42480,59810,75830,91240,38570,56420,73680,87250,40930,58910];
-      const sizes = [18.6,24.2,31.8,42.5,15.3,22.7,29.4,38.1,12.8,19.5,26.9,34.7,44.2,16.4,23.8,33.2,11.9,21.3,28.6,36.5,14.7,25.1,32.9,41.3,17.2,26.4,35.8,43.9,13.6,20.8,30.2,39.7,10.5,22.1,27.9,37.4,16.9,24.6,33.7,40.8,15.8,23.1,32.4,42.9,18.2,27.1,35.2,43.6,14.2,21.9,29.8,38.9,12.4,19.8,26.3,34.9,41.7,17.8,25.7,36.2,13.9,22.4,30.9,39.4,15.1,23.5,33.9,41.1,18.9,27.8,36.7,44.8,16.7,25.3];
-      const votes = [12480,18932,25640,31270,14850,22560,28190,35420,10230,17840,23490,30980,38750,13260,19680,26940,34120,11240,18760,25380,32910,40580,14290,21830,27460,34870,42130,15980,23740,29560,37210,44890,10890,18240,24680,31970,39420,12860,20340,26790,33580,41270,15230,22890,28930,36210,43870,11890,19420,25840,32650,40180,13860,21560,27890,35540,42980,16450,24180,30870,38520,45980,10580,17920,23850,31180,38940,46210,13480,20980,27560,34890,42360,49120];
-      const idx = (id-1) % downloads.length;
-      return { downloads: downloads[idx], size: sizes[idx], votes: votes[idx] };
-    }
-
-    // ----- Category-based content for info & about -----
-    function getCategory(name){
-      const n = name.toLowerCase();
-      if(n.includes('slot')) return 'slot';
-      if(n.includes('rummy')) return 'rummy';
-      if(n.includes('teen') || n.includes('patti')) return 'teenpatti';
-      if(n.includes('spin')) return 'spin';
-      if(n.includes('bingo')) return 'bingo';
-      if(n.includes('arcade')) return 'arcade';
-      return 'general';
-    }
-
-    function getInfoText(app){
-      const cat = getCategory(app.name);
-      const n = app.name;
-      if(cat==='slot'){
-        return `${n} offers an immersive slots experience with vibrant reels and engaging themes. Players can enjoy smooth spins, interactive bonus rounds, and visually rich graphics. The game interface is designed for quick navigation, allowing users to adjust bets and explore multiple paylines. With dynamic sound effects and frequent animations, ${n} keeps the session lively and entertaining.`;
-      } else if(cat==='rummy'){
-        return `${n} is a classic card game that combines strategy and skill. Players can join tables, form valid sequences, and compete against opponents. The app features smooth dealing, intuitive drag-and-drop, and multiple formats like points, pool, and deals. ${n} provides a clean interface with real-time score updates and fair play mechanics.`;
-      } else if(cat==='teenpatti'){
-        return `${n} brings the popular Indian card game to your fingertips. Experience quick rounds, side bets, and joker variations. The app offers a vibrant table view, player avatars, and seamless betting controls. ${n} focuses on social interaction and quick decision-making, making each round thrilling.`;
-      } else if(cat==='spin'){
-        return `${n} is a fast-paced spin game with colorful wheels and instant results. Players can place their bets and watch the wheel spin with smooth animations. The game includes multiple bet options, auto-spin features, and a clear win display. ${n} is designed for quick sessions and casual fun.`;
-      } else {
-        return `${n} is a feature-rich gaming app that offers a blend of entertainment and challenge. With a user-friendly interface and responsive controls, players can dive into various game modes. The app ensures stable performance and regular updates to keep the experience fresh and engaging.`;
-      }
-    }
-
-    function getAboutText(app){
-      const cat = getCategory(app.name);
-      const n = app.name;
-      if(cat==='slot'){
-        return `About ${n}: This slot game is built with high-quality graphics and a user-centric interface. Players can choose from a variety of themes, each with unique symbols and bonus features. The navigation is straightforward, with clear buttons for spin, autoplay, and bet adjustment. ${n} also includes a detailed paytable and history log. The game's RTP and volatility are designed to offer balanced entertainment. Regular updates introduce new themes and seasonal events, keeping the gameplay fresh and engaging.`;
-      } else if(cat==='rummy'){
-        return `About ${n}: ${n} provides a premium rummy experience with smooth gameplay and secure servers. Players can participate in tournaments or practice tables. The interface includes a well-organized lobby, player statistics, and chat functions. Gameplay is enhanced with quick card sorting, discard suggestions, and undo options. ${n} supports both casual and competitive play, making it suitable for all skill levels. The app also offers daily rewards and leaderboards to motivate players.`;
-      } else if(cat==='teenpatti'){
-        return `About ${n}: ${n} is designed for fans of Teen Patti, offering a realistic card table experience. The game includes classic and variant modes, with side bets and bonus rounds. The interface is clean, with large cards and clear betting chips. Players can bluff, raise, or fold with simple taps. ${n} also features a tutorial mode for beginners and a competitive ranking system. The social aspect allows players to invite friends and play together, making it a complete card gaming platform.`;
-      } else if(cat==='spin'){
-        return `About ${n}: ${n} is a modern spin game that combines luck and strategy. The app features multiple wheel types, each with unique reward structures. Players can customize their experience with different themes and soundtracks. The interface is intuitive, showing bet history and win statistics. ${n} also includes a practice mode to understand the mechanics before playing for real. The game is optimized for mobile, ensuring smooth performance and quick loading times.`;
-      } else {
-        return `About ${n}: This app offers a versatile gaming experience with a focus on user satisfaction. The interface is designed to be intuitive, with clear menus and responsive buttons. Players can access various game modes, each with distinct challenges and rewards. ${n} includes a help section, leaderboard, and regular updates to improve functionality. The developers prioritize user feedback, ensuring the app evolves with player needs. Whether you're a casual or dedicated gamer, ${n} provides a reliable and enjoyable platform.`;
-      }
-    }
-
-    // ----- render home -----
-    function renderHome(){
-      const grid = document.getElementById('homeGrid');
-      grid.innerHTML = '';
-      APPS.forEach((app, idx) => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.innerHTML = `
-          <div class="card-badge">${app.id}</div>
-          <img class="card-img" src="${app.image}" alt="${app.name}" loading="lazy">
-          <div class="card-body">
-            <div class="card-name">${app.name}</div>
-            <div class="card-tags">
-              <span class="card-bonus"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/><line x1="10" y1="12" x2="10" y2="16"/><line x1="14" y1="12" x2="14" y2="16"/></svg> ${app.bonus}</span>
-              <span class="card-withdraw"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="2" x2="12" y2="9"/><polyline points="9 6 12 9 15 6"/></svg> ₹100</span>
+    <!-- ===== HEADER ===== -->
+    <header class="header" id="mainHeader">
+        <div class="container header-inner">
+            <div class="logo-area" onclick="navigateTo('home')" style="cursor:pointer;">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 4v16"/><path d="M16 4v16"/><path d="M4 8h16"/><path d="M4 16h16"/></svg>
+                </div>
+                <span class="logo-text">Game<span>Hub</span></span>
             </div>
-            <button class="card-dl-btn" data-id="${app.id}">Download</button>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-      // attach events
-      grid.querySelectorAll('.card-dl-btn').forEach(btn => {
-        btn.addEventListener('click', function(e){
-          e.stopPropagation();
-          const id = parseInt(this.getAttribute('data-id'));
-          showDetail(id);
-        });
-      });
-    }
-
-    // ----- show detail -----
-    function showDetail(id){
-      const app = APPS.find(a => a.id === id);
-      if(!app) return;
-      const page = document.getElementById('page-detail');
-      const extras = getExtras(id);
-      const info = getInfoText(app);
-      const about = getAboutText(app);
-      // related (all except current)
-      const related = APPS.filter(a => a.id !== id);
-
-      let html = `
-        <div class="detail-hero">
-          <img src="${app.image}" alt="${app.name}" loading="lazy">
-          <div class="detail-name">${app.name}</div>
-          <div class="detail-meta">
-            <span><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/><line x1="10" y1="12" x2="10" y2="16"/><line x1="14" y1="12" x2="14" y2="16"/></svg> ${app.bonus}</span>
-            <span><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="2" x2="12" y2="9"/><polyline points="9 6 12 9 15 6"/></svg> ₹100</span>
-            <span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M12 2v8"/><path d="M12 22v-8"/><path d="M21 12h-8"/><path d="M3 12h8"/></svg> ${extras.downloads}+</span>
-            <span><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg> ${extras.size} MB</span>
-            <span><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> ${extras.votes}+</span>
-          </div>
-          <button class="detail-dl-btn" id="detailDlBtn">Download Now</button>
+            <button class="menu-btn" id="menuToggle" aria-label="Open menu">
+                <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+            </button>
         </div>
-        <div class="info-bag">
-          <h3><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> About ${app.name}</h3>
-          <p>${info}</p>
-        </div>
-        <div class="about-bag">
-          <h3><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1010 10 10 10 0 00-10-10z"/><path d="M12 8v8"/><path d="M8 12h8"/></svg> More about ${app.name}</h3>
-          <p>${about}</p>
-        </div>
-        <div class="related-title"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg> Other Apps & Games</div>
-        <div class="related-grid" id="relatedGrid"></div>
-        <!-- BEST INFO ACCORDION -->
-        <div class="best-section">
-          <div class="accordion-item"><div class="accordion-head" data-target="acc1"><span>🎯 Game Experience</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="accordion-body" id="acc1">Explore smooth gameplay, responsive controls, and engaging mechanics. The app delivers a balanced experience with fair difficulty curves and rewarding milestones.</div></div>
-          <div class="accordion-item"><div class="accordion-head" data-target="acc2"><span>🧭 Navigation & Interface</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="accordion-body" id="acc2">The interface is clean, with intuitive menus and quick access to all features. Buttons are well-placed, and the layout adapts seamlessly to different screen sizes.</div></div>
-          <div class="accordion-item"><div class="accordion-head" data-target="acc3"><span>📥 Download Guidance</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="accordion-body" id="acc3">Download the APK directly from the official link. Ensure your device allows installations from unknown sources. Always verify the file integrity before installation.</div></div>
-          <div class="accordion-item"><div class="accordion-head" data-target="acc4"><span>⚖️ Responsible Use</span><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div><div class="accordion-body" id="acc4">Gaming should be fun and balanced. Set time limits, avoid chasing losses, and participate within your means. These apps are designed for entertainment, not guaranteed returns.</div></div>
-        </div>
-        <!-- REVIEWS -->
-        <div class="review-section">
-          <h3 style="margin-bottom:10px;">⭐ Ratings & Player Reviews</h3>
-          <div class="review-scroll" id="reviewScroll"></div>
-        </div>
-      `;
-      page.innerHTML = html;
-      // attach download button
-      document.getElementById('detailDlBtn').addEventListener('click', function(){
-        window.open(app.link, '_blank');
-      });
-      // related grid
-      const relGrid = document.getElementById('relatedGrid');
-      relGrid.innerHTML = '';
-      related.forEach(rel => {
-        const relCard = document.createElement('div');
-        relCard.className = 'related-card';
-        relCard.innerHTML = `
-          <img src="${rel.image}" alt="${rel.name}" loading="lazy">
-          <div class="related-info"><div class="rn">${rel.name}</div><div class="rb"><svg viewBox="0 0 24 24" width="14" height="14"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/><line x1="10" y1="12" x2="10" y2="16"/><line x1="14" y1="12" x2="14" y2="16"/></svg> ${rel.bonus}</div><div class="rw">₹100 min withdraw</div></div>
-          <button class="related-dl" data-id="${rel.id}">View</button>
-        `;
-        relGrid.appendChild(relCard);
-      });
-      relGrid.querySelectorAll('.related-dl').forEach(btn => {
-        btn.addEventListener('click', function(){
-          const rid = parseInt(this.getAttribute('data-id'));
-          showDetail(rid);
-        });
-      });
-      // accordion
-      document.querySelectorAll('.accordion-head').forEach(head => {
-        head.addEventListener('click', function(){
-          const targetId = this.getAttribute('data-target');
-          const body = document.getElementById(targetId);
-          if(!body) return;
-          const isOpen = body.classList.contains('open');
-          document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
-          document.querySelectorAll('.accordion-head').forEach(h => h.classList.remove('open'));
-          if(!isOpen){
-            body.classList.add('open');
-            this.classList.add('open');
-          }
-        });
-      });
-      // reviews
-      const reviewScroll = document.getElementById('reviewScroll');
-      const reviewNames = ['Aisha K.', 'Rohit M.', 'Priya S.', 'Vikram R.', 'Neha G.'];
-      const reviewTexts = [
-        `"The gameplay is smooth and the bonus offers are generous. I appreciate the quick load times and crisp graphics. Definitely one of the better apps in this category."`,
-        `"I love the interface — it's clean and easy to navigate. The controls are responsive, and the game runs flawlessly on my Android device. Highly recommended."`,
-        `"The visual quality is outstanding. Every detail is well-designed, from the card animations to the background themes. It creates an immersive atmosphere."`,
-        `"Responsiveness is top-notch. Swiping and tapping feel natural, and the app never lags. The developers have clearly optimized it well for mobile."`,
-        `"Overall, a fantastic experience. The game offers a good balance of challenge and fun. I've played several similar apps, but this one stands out."`
-      ];
-      reviewScroll.innerHTML = '';
-      for(let i=0; i<5; i++){
-        const card = document.createElement('div');
-        card.className = 'review-card';
-        const initials = reviewNames[i].split(' ').map(s=>s[0]).join('');
-        card.innerHTML = `
-          <div class="review-stars">${'<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'.repeat(5)}</div>
-          <div class="review-text">${reviewTexts[i]}</div>
-          <div class="reviewer">
-            <div class="reviewer-avatar">${initials}</div>
-            <div class="reviewer-info">${reviewNames[i]} <small><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg> Verified Gamer</small></div>
-          </div>
-        `;
-        reviewScroll.appendChild(card);
-      }
+    </header>
 
-      switchPage('detail');
-    }
+    <!-- ===== DRAWER ===== -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+    <nav class="drawer" id="drawer" role="navigation" aria-label="Main navigation">
+        <div class="drawer-header">
+            <span class="drawer-title">Menu</span>
+            <button class="drawer-close" id="drawerClose" aria-label="Close menu">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="drawer-nav">
+            <a onclick="navigateTo('home');closeDrawer();" class="active" data-page="home">
+                <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10"/></svg>
+                Home
+            </a>
+            <a onclick="navigateTo('about');closeDrawer();" data-page="about">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                About
+            </a>
+            <a onclick="navigateTo('contact');closeDrawer();" data-page="contact">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.8 19.8 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.574 2.81.7A2 2 0 0122 16.92z"/></svg>
+                Contact
+            </a>
+            <a onclick="navigateTo('disclaimer');closeDrawer();" data-page="disclaimer">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                Disclaimer
+            </a>
+            <a onclick="navigateTo('privacy');closeDrawer();" data-page="privacy">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Privacy Policy
+            </a>
+        </div>
+        <div class="drawer-footer">© 2026 GameHub &bull; All rights reserved</div>
+    </nav>
 
-    // ----- switch page -----
-    function switchPage(pageId){
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      const target = document.getElementById('page-'+pageId);
-      if(target) target.classList.add('active');
-      // close drawer
-      closeDrawer();
-    }
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="container" id="mainContent">
 
-    // ----- drawer -----
-    function openDrawer(){ document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
-    function closeDrawer(){ document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
-    document.getElementById('menuOpen').addEventListener('click', openDrawer);
-    document.getElementById('menuClose').addEventListener('click', closeDrawer);
-    document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
-    // drawer nav
-    document.querySelectorAll('.drawer-nav a, .footer a[data-page]').forEach(link => {
-      link.addEventListener('click', function(e){
-        e.preventDefault();
-        const page = this.getAttribute('data-page');
-        if(page === 'home') {
-          switchPage('home');
-          renderHome(); // re-render to ensure fresh
-        } else {
-          switchPage(page);
+        <!-- ===== HOME PAGE ===== -->
+        <section class="page active" id="page-home">
+            <div class="home-header">
+                <h1>All Apps &amp; Games</h1>
+                <p>Explore 74 original apps and games</p>
+            </div>
+            <div class="app-grid" id="homeGrid"></div>
+        </section>
+
+        <!-- ===== DETAILS PAGE ===== -->
+        <section class="page" id="page-details">
+            <button class="details-back" onclick="navigateTo('home')">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                Back to Home
+            </button>
+            <div id="detailsContent"></div>
+        </section>
+
+        <!-- ===== ABOUT PAGE ===== -->
+        <section class="page" id="page-about">
+            <div class="static-page">
+                <h1>About GameHub</h1>
+                <p class="sub">Your trusted directory for apps and games</p>
+                <div class="static-card">
+                    <h2>Welcome to GameHub</h2>
+                    <p>GameHub is a curated directory of 74 original apps and games. We bring together a diverse collection of entertainment, card games, slots, rummy, teen patti, and more — all in one place.</p>
+                    <p>Our platform helps you discover new games, learn about their features, and access official download links. Every app and game listed here is presented with its original name, image, bonus offer, and direct download link.</p>
+                    <h2>Our Collection</h2>
+                    <p>From YONO New App and 567 Slots to Rummy 91 and Spin Crush — our directory spans multiple categories including slots, rummy, teen patti, arcade, and casino-style games. Each entry includes detailed information, unique bonus amounts, and minimum withdrawal details.</p>
+                    <h2>Easy Navigation</h2>
+                    <p>Browse all 74 apps on the Home page. Tap any Download button to open the detailed view for that specific app. There you'll find the original image, full description, about section, related apps, best information accordion, and player reviews.</p>
+                    <h2>Download Guidance</h2>
+                    <p>Every details page includes a prominent Download button that links directly to the original APK or download page provided by the app publisher. We do not host or modify any APK files — we simply direct you to the official source.</p>
+                    <p>GameHub is designed to be fast, mobile-friendly, and easy to use on Android, WebView, and desktop browsers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== CONTACT PAGE ===== -->
+        <section class="page" id="page-contact">
+            <div class="static-page">
+                <h1>Contact Us</h1>
+                <p class="sub">Get in touch with the GameHub team</p>
+                <div class="static-card">
+                    <h2>We're Here to Help</h2>
+                    <p>If you have questions about the apps and games listed in our directory, need help with navigation, or want to report an issue — we're ready to assist.</p>
+                    <p>Please note that GameHub is a directory platform. We do not operate or manage any of the third-party apps or games listed. For app-specific support, please contact the respective app publisher directly.</p>
+                    <h2>General Inquiries</h2>
+                    <p>For general questions about our platform, content suggestions, or feedback, you can reach out through our support channel.</p>
+                    <p>We aim to respond to all queries within 24-48 hours.</p>
+                    <h2>Responsible Communication</h2>
+                    <p>When contacting us, please provide clear details about your query. If you're reporting a broken link or missing information, include the app name and the issue you encountered.</p>
+                    <p style="color:#9CA3AF;font-size:13px;margin-top:12px;">Note: We do not provide phone or WhatsApp support. All communication is handled through our platform.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== DISCLAIMER PAGE ===== -->
+        <section class="page" id="page-disclaimer">
+            <div class="static-page">
+                <h1>Disclaimer</h1>
+                <p class="sub">Important information about our directory</p>
+                <div class="static-card">
+                    <h2>Information Accuracy</h2>
+                    <p>The information provided on GameHub is for general informational purposes only. While we strive to keep all app names, images, bonus amounts, and download links accurate and up-to-date, we make no representations or warranties of any kind, express or implied, about the completeness, accuracy, reliability, suitability, or availability of the information.</p>
+                    <h2>Third-Party Applications</h2>
+                    <p>GameHub is a directory platform. We do not own, operate, or control any of the third-party apps or games listed. All apps and games are the property of their respective owners. We do not host APK files or provide direct downloads — we only link to the official download pages provided by the app publishers.</p>
+                    <h2>External Links</h2>
+                    <p>Our directory contains links to external websites and download pages. These links are provided for your convenience. We have no control over the content, privacy policies, or practices of any third-party sites. We do not endorse or assume responsibility for any third-party content.</p>
+                    <h2>User Responsibility</h2>
+                    <p>Users are responsible for their own actions when downloading and using third-party applications. Always verify the authenticity of APK files and ensure they come from trusted sources. GameHub does not guarantee the safety, legality, or functionality of any third-party app.</p>
+                    <h2>Real-Money Participation</h2>
+                    <p>Some apps and games listed may involve real-money transactions, gambling, or wagering. Participation in such activities carries financial risk. Users must be of legal age in their jurisdiction and should play responsibly. GameHub does not encourage or promote irresponsible gambling.</p>
+                    <h2>No Guarantees</h2>
+                    <p>GameHub does not guarantee winnings, withdrawals, bonuses, or payments from any app or game. Bonus amounts shown are as provided by the app publishers and may be subject to terms and conditions.</p>
+                    <p style="color:#9CA3AF;font-size:13px;margin-top:12px;">Last updated: September 2026</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== PRIVACY POLICY PAGE ===== -->
+        <section class="page" id="page-privacy">
+            <div class="static-page">
+                <h1>Privacy Policy</h1>
+                <p class="sub">How we handle your information</p>
+                <div class="static-card">
+                    <h2>Information Collection</h2>
+                    <p>GameHub does not collect, store, or process any personal information from its users. We do not require registration, login, or any form of data submission to browse the directory.</p>
+                    <h2>Local Storage</h2>
+                    <p>We may use basic local storage (such as browser cache) to improve your experience — for example, remembering your last viewed page. This data stays on your device and is not shared with us or any third party.</p>
+                    <h2>Cookies</h2>
+                    <p>GameHub does not use cookies for tracking or analytics. We do not employ any third-party tracking scripts or advertising networks.</p>
+                    <h2>Third-Party Links</h2>
+                    <p>Our directory contains links to external apps and websites. These third-party sites may have their own privacy policies. We encourage you to review their policies before providing any personal information.</p>
+                    <h2>Security</h2>
+                    <p>Since we do not collect any personal data, there is no user data to secure. However, we take reasonable measures to ensure the integrity of our platform.</p>
+                    <h2>Changes to This Policy</h2>
+                    <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated revision date.</p>
+                    <p style="color:#9CA3AF;font-size:13px;margin-top:12px;">Last updated: September 2026</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-links">
+                <a onclick="navigateTo('home')">Home</a>
+                <a onclick="navigateTo('about')">About</a>
+                <a onclick="navigateTo('contact')">Contact</a>
+                <a onclick="navigateTo('disclaimer')">Disclaimer</a>
+                <a onclick="navigateTo('privacy')">Privacy Policy</a>
+            </div>
+            <div class="footer-note">
+                GameHub is a directory platform. We do not host or distribute any APK files. All apps and games are the property of their respective owners. Play responsibly.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // ============================================================
+        // 1. DATA — 74 ORIGINAL APPS/GAMES (exact provided data)
+        // ============================================================
+        const appsData = [{
+            id: 1,
+            name: "YONO NEW APP",
+            image: "https://i.ibb.co/0RZPw4wH/Screenshot-20260814-093236.jpg",
+            bonus: "₹250",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 2,
+            name: "567 SLOTS",
+            image: "https://i.ibb.co/QWVBtNG/Screenshot-20260814-045334.jpg",
+            bonus: "₹350",
+            link: "https://join567slots0.com/?code=4NYF487URJ6&t=1781505684"
+        }, {
+            id: 3,
+            name: "SAGA SLOTS",
+            image: "https://i.ibb.co/k20yYCYZ/Screenshot-20260814-045747.jpg",
+            bonus: "₹400",
+            link: "https://www.sagaslots5.com/?code=0QHJSERZYMV&t=1781505813"
+        }, {
+            id: 4,
+            name: "JAIHO 91",
+            image: "https://i.ibb.co/bnQfcCV/Screenshot-20260814-045233.jpg",
+            bonus: "₹280",
+            link: "https://jaiho91bonus.vip/?code=C42T99ZQHAT&t=1781506067"
+        }, {
+            id: 5,
+            name: "RUMMY LUDO",
+            image: "https://i.ibb.co/JR326qDL/Screenshot-20260814-050655.jpg",
+            bonus: "₹320",
+            link: "https://rummyludoapp37.com/"
+        }, {
+            id: 6,
+            name: "ABC RUMMY",
+            image: "https://i.ibb.co/CKxFgdKB/Screenshot-20260814-050911.jpg",
+            bonus: "₹300",
+            link: "https://d34i569g8ztoql.cloudfront.net/abcrummy_MeApp.apk"
+        }, {
+            id: 7,
+            name: "RUMMY 91",
+            image: "https://i.ibb.co/ymwjhMwy/Screenshot-20260814-051214.jpg",
+            bonus: "₹275",
+            link: "https://d16sfv4ssrmnvt.cloudfront.net/rummy91_AGENT.apk"
+        }, {
+            id: 8,
+            name: "LOVE RUMMY",
+            image: "https://i.ibb.co/FkzpZCrk/Screenshot-20260814-051426.jpg",
+            bonus: "₹330",
+            link: "https://d34i569g8ztoql.cloudfront.net/loverummy_App.apk"
+        }, {
+            id: 9,
+            name: "SPIN CRUSH",
+            image: "https://i.ibb.co/M5cLBLc1/Screenshot-20260814-034836.jpg",
+            bonus: "₹260",
+            link: "https://d292swwe9zki3u.cloudfront.net/spincrush_freecash.apk"
+        }, {
+            id: 10,
+            name: "TOP RUMMY",
+            image: "https://i.ibb.co/9mwHZbCp/Screenshot-20260814-051751.jpg",
+            bonus: "₹290",
+            link: "https://th7.my/BY1JWS/3gvute0"
+        }, {
+            id: 11,
+            name: "Hello Rummy",
+            image: "https://i.ibb.co/ksXtjTVp/Screenshot-20260814-052023.jpg",
+            bonus: "₹310",
+            link: "https://www.earntp.com/gold/jm9n7r"
+        }, {
+            id: 12,
+            name: "RUMMY 365",
+            image: "https://i.ibb.co/jvpGswXD/Screenshot-20260814-052223.jpg",
+            bonus: "₹340",
+            link: "https://join567slots0.com/?code=4NYF487URJ6&t=1781505684"
+        }, {
+            id: 13,
+            name: "TEEN PATTI GOLD",
+            image: "https://i.ibb.co/m5sHK3ys/Screenshot-20260814-052420.jpg",
+            bonus: "₹360",
+            link: "https://www.earntp.com/gold/jm9n7r"
+        }, {
+            id: 14,
+            name: "TEEN PATTI MASTER",
+            image: "https://i.ibb.co/cXkXTDPR/Screenshot-20260814-052628.jpg",
+            bonus: "₹270",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 15,
+            name: "YONO RUMMY",
+            image: "https://i.ibb.co/b5THXzC7/Screenshot-20260814-040920.jpg",
+            bonus: "₹305",
+            link: "https://yonorummy043.com/?code=VIPYQC5EE9X&t=1781107758"
+        }, {
+            id: 16,
+            name: "SLOTS WINNER",
+            image: "https://i.ibb.co/wNT5cZ1k/Screenshot-20260814-041656.jpg",
+            bonus: "₹380",
+            link: "https://slotswinneri.com/?code=PGVC6CBNF53&t=1781107393"
+        }, {
+            id: 17,
+            name: "GOOD SLOTS",
+            image: "https://i.ibb.co/Hpk3dp9X/Screenshot-20260814-053030.jpg",
+            bonus: "₹290",
+            link: "https://7sharegoodslots.vip?pid=320806209&channel=2010001&t=pdd2&pkg=com.1"
+        }, {
+            id: 18,
+            name: "Diwa Slot",
+            image: "https://i.ibb.co/2zv2Nyy/Screenshot-20260814-053408.jpg",
+            bonus: "₹315",
+            link: "https://sharediwaslot1.vip?pid=483455673&channel=2010002&t=pdd2&pkg=com.diwaslotwhl.app"
+        }, {
+            id: 19,
+            name: "GOGO RUMMY",
+            image: "https://i.ibb.co/RTwyQ4tF/Screenshot-20260814-053625.jpg",
+            bonus: "₹285",
+            link: "https://www.gogorummyagent.com/?code=V4UTQA2VYMQ&t=1781196694"
+        }, {
+            id: 20,
+            name: "JOY RUMMY",
+            image: "https://i.ibb.co/SCc42Cp/Screenshot-20260814-053827.jpg",
+            bonus: "₹325",
+            link: "https://www.joyrummymax.com/?code=J5KFTAWJ9X5&t=1781198100"
+        }, {
+            id: 21,
+            name: "SPIN GOLD",
+            image: "https://i.ibb.co/0yd0J3dy/Screenshot-20260814-030656.jpg",
+            bonus: "₹345",
+            link: "https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828"
+        }, {
+            id: 22,
+            name: "BINGO 101",
+            image: "https://i.ibb.co/Xk2wP9Nk/Screenshot-20260814-034121.jpg",
+            bonus: "₹265",
+            link: "https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828"
+        }, {
+            id: 23,
+            name: "YES SPIN",
+            image: "https://i.ibb.co/60hFLZzw/Screenshot-20260814-054324.jpg",
+            bonus: "₹295",
+            link: "https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907"
+        }, {
+            id: 24,
+            name: "YONO ARCADE",
+            image: "https://i.ibb.co/R4hkwzbW/Screenshot-20260814-040720.jpg",
+            bonus: "₹410",
+            link: "https://yonoarcadeapk9.com/?code=96LNEL9FQXZ&t=1781199006"
+        }, {
+            id: 25,
+            name: "SVIP 777",
+            image: "https://i.ibb.co/MyQvt1R2/Screenshot-20260814-054554.jpg",
+            bonus: "₹370",
+            link: "https://www.svip777.life?pid=297924008&channel=2050001&t=pdd2&pkg=com.svip777.h5"
+        }, {
+            id: 26,
+            name: "OK RUMMY",
+            image: "https://i.ibb.co/xKhB5qzg/Screenshot-20260814-054736.jpg",
+            bonus: "₹300",
+            link: "https://www.okrummy22.com/?code=H2GU92WUXXA&t=1781199220"
+        }, {
+            id: 27,
+            name: "HINDI 777",
+            image: "https://i.ibb.co/pvtCPtTT/Screenshot-20260814-055304.jpg",
+            bonus: "₹335",
+            link: "https://www.hindi777agent5.com/?code=7LFFR8WPHEG&t=1781199307"
+        }, {
+            id: 28,
+            name: "BET 213",
+            image: "https://i.ibb.co/6c3k7wdG/Screenshot-20260814-055545.jpg",
+            bonus: "₹355",
+            link: "https://www.bet213.rocks/?code=2QTKPV4BYDH&t=1781199576"
+        }, {
+            id: 29,
+            name: "BOSS RUMMY",
+            image: "https://i.ibb.co/jvwscPDf/Screenshot-20260814-055812.jpg",
+            bonus: "₹275",
+            link: "https://www.bossrummyy.com/?code=LSHTVUZE1NR&t=1781429504"
+        }, {
+            id: 30,
+            name: "YONO 777",
+            image: "https://i.ibb.co/v4G1fQtr/Screenshot-20260814-060203.jpg",
+            bonus: "₹390",
+            link: "https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388"
+        }, {
+            id: 31,
+            name: "Diwa VIP",
+            image: "https://i.ibb.co/6RQ2tGnw/Screenshot-20260814-060417.jpg",
+            bonus: "₹310",
+            link: "https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388"
+        }, {
+            id: 32,
+            name: "Diwa 777",
+            image: "https://i.ibb.co/hFNKBdvq/Screenshot-20260814-060707.jpg",
+            bonus: "₹285",
+            link: "https://sharediwa7771.top?pid=287747863&channel=2010001&t=pdd2&pkg=com.diwa777.app"
+        }, {
+            id: 33,
+            name: "YONO GAMES",
+            image: "https://i.ibb.co/Gf0fxYQ4/Screenshot-20260814-040510.jpg",
+            bonus: "₹260",
+            link: "https://yonogamesm.com/?code=LHS49AEHVMR&t=1784314209"
+        }, {
+            id: 34,
+            name: "INR RUMMY",
+            image: "https://i.ibb.co/hJpHMvPg/Screenshot-20260814-061018.jpg",
+            bonus: "₹305",
+            link: "https://inrrummy.club/?code=JMQBV8TAPD7&t=1784298106"
+        }, {
+            id: 35,
+            name: "MBM BET",
+            image: "https://i.ibb.co/0j53Gb5W/Screenshot-20260814-042359.jpg",
+            bonus: "₹340",
+            link: "https://www.mbmbet3.com/?code=GD3H3VA6YK5&t=1784297830"
+        }, {
+            id: 36,
+            name: "GOA SPIN",
+            image: "https://i.ibb.co/jkQ5z96x/Screenshot-20260814-033551.jpg",
+            bonus: "₹290",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 37,
+            name: "777 GAME",
+            image: "https://i.ibb.co/tMJ0L7L8/1786658176260.jpg",
+            bonus: "₹320",
+            link: "https://t.me/yonogamestite"
+        }, {
+            id: 38,
+            name: "TEEN PATTI",
+            image: "https://i.ibb.co/fzmMFV0F/Screenshot-20260814-061532.jpg",
+            bonus: "₹270",
+            link: "https://www.earntp.com/gold/jm9n7r"
+        }, {
+            id: 39,
+            name: "All YONO GAMES",
+            image: "https://i.ibb.co/cKc56vJj/Screenshot-20260814-061719.jpg",
+            bonus: "₹330",
+            link: "https://www.earntp.com/gold/jm9n7r"
+        }, {
+            id: 40,
+            name: "NEW YONO GAMES",
+            image: "https://i.ibb.co/R4hkwzbW/Screenshot-20260814-062237.jpg",
+            bonus: "₹295",
+            link: "https://t.me/yonogamestite"
+        }, {
+            id: 41,
+            name: "YONO APPS",
+            image: "https://i.ibb.co/DfQgSYrP/Screenshot-20260814-061950.jpg",
+            bonus: "₹315",
+            link: "https://t.me/yonogamestite"
+        }, {
+            id: 42,
+            name: "SPIN WINNER",
+            image: "https://i.ibb.co/PZNRbCwk/Screenshot-20260814-034801.jpg",
+            bonus: "₹350",
+            link: "https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907"
+        }, {
+            id: 43,
+            name: "YONO All GAMES",
+            image: "https://i.ibb.co/TMJwF88r/Screenshot-20260814-031654.jpg",
+            bonus: "₹280",
+            link: "https://diwavipshare.cc?pid=428256719&channel=2050001&t=pdd2&pkg=com.diwavip.h5"
+        }, {
+            id: 44,
+            name: "SPIN LUCKY",
+            image: "https://i.ibb.co/Q7YCZLWP/Screenshot-20260814-041943.jpg",
+            bonus: "₹265",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 45,
+            name: "MAX RUMMY",
+            image: "https://i.ibb.co/xKH8Zz6C/Screenshot-20260814-032014.jpg",
+            bonus: "₹325",
+            link: "https://www.maxrummy66.com/?code=QUMWTJCMZ5N&t=1784912540"
+        }, {
+            id: 46,
+            name: "RANI SLOTS",
+            image: "https://i.ibb.co/jZMq58Pc/Screenshot-20260814-063312.jpg",
+            bonus: "₹375",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 47,
+            name: "1GO PLUS",
+            image: "https://i.ibb.co/PzV7FRHT/Screenshot-20260814-063537.jpg",
+            bonus: "₹300",
+            link: "https://1go.plus/4h91q"
+        }, {
+            id: 48,
+            name: "RUMMY ULTRA",
+            image: "https://i.ibb.co/pjWGb0ty/Screenshot-20260814-034858.jpg",
+            bonus: "₹290",
+            link: "https://www.rummyultraa.com/?dl=5hrw1p"
+        }, {
+            id: 49,
+            name: "789 JACKPOTS",
+            image: "https://i.ibb.co/5WV6Z60y/Screenshot-20260814-063848.jpg",
+            bonus: "₹420",
+            link: "https://join789jackpots1.com/?code=XYUGRMBA44Y&t=1784907944"
+        }, {
+            id: 50,
+            name: "JAIHO WIN",
+            image: "https://i.ibb.co/qFmG8b9q/Screenshot-20260814-041444.jpg",
+            bonus: "₹310",
+            link: "https://www.jaihowin12.com/?code=1XNCQVU3XA5&t=1784914695"
+        }, {
+            id: 51,
+            name: "SLOTS SPIN",
+            image: "https://i.ibb.co/0pSskjBY/Screenshot-20260814-032904.jpg",
+            bonus: "₹345",
+            link: "https://slotsspinq.com/?code=XJB6LEBYG8R&t=1784908638"
+        }, {
+            id: 52,
+            name: "NETA VIP",
+            image: "https://i.ibb.co/yBKhXW7S/Screenshot-20260814-032933.jpg",
+            bonus: "₹365",
+            link: "https://neta3.vip/?code=DR0V69R7BGJ&t=1784915088"
+        }, {
+            id: 53,
+            name: "JAIHO 777 VIP",
+            image: "https://i.ibb.co/xVcCbWY/1786669966384.jpg",
+            bonus: "₹395",
+            link: "https://jaiho777agent.com?code=98X2D8Y3QGD&t=1784915217"
+        }, {
+            id: 54,
+            name: "DHAN GAME",
+            image: "https://i.ibb.co/JRshnS3z/Screenshot-20260814-033641.jpg",
+            bonus: "₹285",
+            link: "https://www.dhanwin365.com/?code=47TWH18LDKB&t=1784915487"
+        }, {
+            id: 55,
+            name: "DIWA GAME",
+            image: "https://i.ibb.co/zVvgvPpL/Screenshot-20260814-040014.jpg",
+            bonus: "₹305",
+            link: "https://diwagameshare.club?pid=345550936&channel=2010002&t=pdd2&pkg=com.diwagamewhx.app"
+        }, {
+            id: 56,
+            name: "BET 54 GAMES",
+            image: "https://i.ibb.co/zWrDwLPt/Screenshot-20260814-033239.jpg",
+            bonus: "₹270",
+            link: "https://www.earntp.com/gold/jm9n7r"
+        }, {
+            id: 57,
+            name: "ALL YONO APPS",
+            image: "https://i.ibb.co/Qq9Zn7f/Screenshot-20260814-064907.jpg",
+            bonus: "₹325",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 58,
+            name: "T989 APPS",
+            image: "https://i.ibb.co/bR8bB9qn/Screenshot-20260814-041927.jpg",
+            bonus: "₹290",
+            link: "https://www.earntp.com/gold/jm9n7r"
+        }, {
+            id: 59,
+            name: "765 CLUB",
+            image: "https://i.ibb.co/LDF3sXTx/Screenshot-20260814-065302.jpg",
+            bonus: "₹335",
+            link: "https://765club.com/?id=637056077"
+        }, {
+            id: 60,
+            name: "MKM BET APK",
+            image: "https://i.ibb.co/wZxK5XGr/Screenshot-20260814-032720.jpg",
+            bonus: "₹300",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 61,
+            name: "YN 777",
+            image: "https://i.ibb.co/v6GbHJ95/Screenshot-20260814-040445.jpg",
+            bonus: "₹350",
+            link: "https://www.y729.com/?code=4SWD98JQ8LU&t=1785588919"
+        }, {
+            id: 62,
+            name: "SPIN 777",
+            image: "https://i.ibb.co/ccGr69gJ/Screenshot-20260814-033520.jpg",
+            bonus: "₹310",
+            link: "https://spin777cc.com/?code=7V9ZG91PA4R&t=1785589035"
+        }, {
+            id: 63,
+            name: "RUMMY 888",
+            image: "https://i.ibb.co/bMgzZNPd/Screenshot-20260814-033315.jpg",
+            bonus: "₹280",
+            link: "https://rummy888vip43.com/?code=7WTEEW87DPM&t=1785589166"
+        }, {
+            id: 64,
+            name: "RUMMY 77",
+            image: "https://i.ibb.co/BXKxwDX/Screenshot-20260814-035041.jpg",
+            bonus: "₹295",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 65,
+            name: "MQM BET",
+            image: "https://i.ibb.co/nqbdMSST/Screenshot-20260814-035011.jpg",
+            bonus: "₹340",
+            link: "https://4mqmshare.vip?pid=486385025&channel=2010001&pkg=com.mqm.bet"
+        }, {
+            id: 66,
+            name: "MAHA GAMES",
+            image: "https://i.ibb.co/nNmMgR25/Screenshot-20260814-034026.jpg",
+            bonus: "₹315",
+            link: "https://good-mahagames.com/?code=J24U9DHRWR8&t=1785589525"
+        }, {
+            id: 67,
+            name: "IND RUMMY",
+            image: "https://i.ibb.co/BKSZbZMt/Screenshot-20260814-091502.jpg",
+            bonus: "₹275",
+            link: "https://www.earntp.com/m/jm9n7r"
+        }, {
+            id: 68,
+            name: "Hi RUMMY",
+            image: "https://i.ibb.co/27r99T47/Screenshot-20260814-091836.jpg",
+            bonus: "₹305",
+            link: "https://joinhirummy.net/?code=RX35XQBCPC9&t=1785590074"
+        }, {
+            id: 69,
+            name: "JAIHO SPIN",
+            image: "https://i.ibb.co/rfc5rdpv/Screenshot-20260814-041105.jpg",
+            bonus: "₹320",
+            link: "https://18jaihospinpro.com/?code=U3VDD22Q&t=1785590326"
+        }, {
+            id: 70,
+            name: "JAIHO RUMMY",
+            image: "https://i.ibb.co/TD7mQ4Qw/Screenshot-20260814-035539.jpg",
+            bonus: "₹290",
+            link: "https://jaihoclud.com/?code=E744HJRF6W7&t=1785590487"
+        }, {
+            id: 71,
+            name: "YONO SLOTS",
+            image: "https://i.ibb.co/TDF7VJ1w/Screenshot-20260814-092416.jpg",
+            bonus: "₹360",
+            link: "https://www.yonoslotsm.com/?code=KU899FV2GFY&t=1785590595"
+        }, {
+            id: 72,
+            name: "Diwa Win",
+            image: "https://i.ibb.co/XfXsfDrh/Screenshot-20260814-032430.jpg",
+            bonus: "₹295",
+            link: "https://diwawinshare.tech?pid=528544053&channel=2010002&pkg=com.diwawin002.app"
+        }, {
+            id: 73,
+            name: "RUMBLE RUMMY",
+            image: "https://i.ibb.co/S7VgC8Cr/Screenshot-20260814-035804.jpg",
+            bonus: "₹310",
+            link: "https://www.rumblerummy111.vip/?code=VX9H1GEM5EL&t=1785590916"
+        }, {
+            id: 74,
+            name: "YONO VIP",
+            image: "https://i.ibb.co/zTH4HqXT/Screenshot-20260814-041418.jpg",
+            bonus: "₹380",
+            link: "https://uonovipfast.com/?code=3crTKB9H7ND&t=1785591034"
+        }];
+
+        // ============================================================
+        // 2. UNIQUE DOWNLOADS, SIZE, VOTES (generated per game)
+        // ============================================================
+        const downloadsList = [
+            "45,309+", "52,841+", "68,220+", "91,740+", "37,560+",
+            "73,190+", "29,875+", "84,632+", "56,418+", "62,307+",
+            "41,289+", "77,543+", "33,901+", "88,214+", "49,672+",
+            "59,834+", "71,065+", "26,458+", "93,527+", "38,716+",
+            "81,349+", "44,073+", "64,891+", "55,238+", "69,427+",
+            "47,816+", "86,205+", "31,694+", "79,362+", "42,580+",
+            "95,148+", "35,279+", "89,633+", "53,904+", "67,551+",
+            "40,187+", "74,826+", "28,463+", "83,799+", "58,342+",
+            "61,508+", "76,934+", "32,715+", "92,061+", "39,424+",
+            "85,673+", "50,196+", "70,388+", "46,529+", "63,742+",
+            "78,215+", "30,882+", "87,416+", "43,697+", "94,281+",
+            "36,847+", "80,504+", "54,139+", "66,824+", "48,953+",
+            "72,471+", "27,346+", "90,176+", "34,568+", "82,937+",
+            "57,289+", "65,443+", "75,812+", "51,734+", "60,625+",
+            "96,302+", "39,887+", "84,154+", "44,961+"
+        ];
+
+        const sizeList = [
+            "18.6 MB", "24.2 MB", "31.8 MB", "42.5 MB", "16.3 MB",
+            "28.9 MB", "22.1 MB", "36.7 MB", "14.8 MB", "39.4 MB",
+            "19.5 MB", "33.2 MB", "26.0 MB", "41.1 MB", "15.9 MB",
+            "30.5 MB", "25.7 MB", "38.3 MB", "17.4 MB", "34.6 MB",
+            "21.8 MB", "29.1 MB", "40.2 MB", "23.4 MB", "35.9 MB",
+            "20.6 MB", "37.8 MB", "27.3 MB", "32.5 MB", "18.2 MB",
+            "43.0 MB", "24.8 MB", "36.1 MB", "19.9 MB", "41.8 MB",
+            "22.7 MB", "33.9 MB", "16.7 MB", "38.6 MB", "25.3 MB",
+            "28.4 MB", "34.2 MB", "21.3 MB", "40.7 MB", "17.8 MB",
+            "37.1 MB", "23.9 MB", "32.0 MB", "26.8 MB", "39.9 MB",
+            "20.1 MB", "35.5 MB", "29.7 MB", "24.4 MB", "42.2 MB",
+            "18.9 MB", "31.4 MB", "27.9 MB", "36.4 MB", "22.9 MB",
+            "33.6 MB", "19.2 MB", "40.9 MB", "25.6 MB", "38.1 MB",
+            "23.1 MB", "34.8 MB", "21.6 MB", "37.5 MB", "26.4 MB",
+            "41.5 MB", "18.4 MB", "32.8 MB", "20.8 MB"
+        ];
+
+        const votesList = [
+            "12,480+", "18,932+", "25,640+", "32,157+", "9,843+",
+            "21,569+", "14,726+", "29,384+", "8,215+", "34,901+",
+            "11,672+", "27,835+", "16,408+", "30,296+", "10,534+",
+            "23,718+", "19,457+", "33,629+", "13,891+", "28,143+",
+            "17,065+", "24,872+", "31,509+", "15,364+", "26,791+",
+            "22,436+", "35,228+", "12,903+", "30,847+", "18,574+",
+            "36,415+", "14,289+", "33,072+", "20,638+", "27,159+",
+            "11,348+", "29,761+", "16,935+", "34,516+", "19,283+",
+            "24,095+", "28,627+", "13,776+", "37,824+", "17,502+",
+            "31,690+", "21,814+", "26,459+", "15,902+", "32,338+",
+            "23,541+", "18,706+", "35,943+", "14,571+", "30,214+",
+            "19,649+", "27,882+", "16,347+", "33,895+", "22,180+",
+            "28,496+", "13,458+", "36,271+", "17,934+", "32,704+",
+            "20,385+", "29,532+", "15,618+", "34,239+", "18,169+",
+            "37,102+", "14,839+", "31,526+", "21,093+"
+        ];
+
+        // ============================================================
+        // 3. REVIEW DATA (5 unique reviews per game — generated)
+        // ============================================================
+        function getReviewsForGame(gameId, gameName) {
+            const base = [
+                { name: "Arjun M.", text: "The gameplay is smooth and engaging. I really enjoy the interface and how easy it is to navigate through different modes. Definitely one of my go-to apps." },
+                { name: "Priya S.", text: "I love the clean layout and quick loading times. The graphics are impressive and the overall experience feels premium. Great for casual play." },
+                { name: "Rahul K.", text: "The controls are responsive and the game flow is well-designed. I appreciate the attention to detail in the visuals and sound effects." },
+                { name: "Sneha R.", text: "This app has become my favorite for quick entertainment. The variety of options keeps things fresh and the bonus offers are a nice touch." },
+                { name: "Vikram D.", text: "Excellent overall experience. The app runs smoothly on my device and the features are well-organized. Highly recommended for anyone looking for quality gaming." }
+            ];
+            // Slightly vary per game using gameId as seed
+            const seed = gameId % 5;
+            const names = ["Aarav S.", "Meera J.", "Karan T.", "Neha W.", "Rohit P.", "Ananya G.", "Dev M.", "Isha R.", "Varun B.", "Zara L."];
+            const nameIdx = (gameId * 7 + seed) % names.length;
+            const texts = [
+                "The experience is truly immersive. I've spent hours playing and the quality never drops. The interface is intuitive and the rewards are motivating.",
+                "I was impressed by the smooth performance and the attention to user experience. Everything is where you expect it to be, and the game responds instantly.",
+                "The visual design is stunning. The color palette and animations make every session enjoyable. It's clear a lot of thought went into the user interface.",
+                "Controls are tight and responsive. Whether you're a beginner or a pro, you'll find the mechanics satisfying. The learning curve is just right.",
+                "This app offers a fantastic balance of challenge and fun. The community features are also well implemented. I've recommended it to all my friends."
+            ];
+            const reviewNames = ["Arjun M.", "Priya S.", "Rahul K.", "Sneha R.", "Vikram D.", "Ankit P.", "Divya N.", "Suresh G.", "Kavya L.", "Manoj B."];
+            const rv = [];
+            for (let i = 0; i < 5; i++) {
+                const idx = (gameId + i * 3) % reviewNames.length;
+                const txtIdx = (gameId + i * 7) % texts.length;
+                rv.push({
+                    name: reviewNames[(idx + i) % reviewNames.length],
+                    text: texts[(txtIdx + i) % texts.length]
+                });
+            }
+            return rv;
         }
-      });
-    });
 
-    // ----- init -----
-    renderHome();
-    switchPage('home');
-  })();
-</script>
+        // ============================================================
+        // 4. CONTENT GENERATORS (unique per game)
+        // ============================================================
+        function getInfoText(gameId, gameName) {
+            const blocks = [
+                `${gameName} offers a dynamic and immersive experience for users looking for quality entertainment. The platform is designed with user engagement in mind, providing intuitive navigation and a clean interface that makes it easy to access all features. Whether you're a first-time visitor or a regular player, the app adapts to your preferences with smooth transitions and quick load times. The visual layout is carefully structured to highlight key functions, ensuring that every interaction feels natural and responsive. With a focus on delivering consistent performance, ${gameName} has become a popular choice among users who value reliability and ease of use.`,
+
+                `One of the standout aspects of ${gameName} is its attention to detail in both design and functionality. From the moment you launch the app, you're greeted with a polished interface that balances aesthetics with practicality. The main dashboard provides quick access to all core activities, while secondary menus are neatly organized to avoid clutter. This thoughtful arrangement allows users to focus on what matters most — enjoying the experience without unnecessary distractions. The app's responsiveness across different screen sizes further enhances its appeal, making it a versatile option for mobile and tablet users alike.`,
+
+                `The core mechanics of ${gameName} are built around user satisfaction and seamless interaction. Each session flows logically from one action to the next, with clear visual cues and feedback that guide you through the process. The app incorporates modern design principles, using soft gradients, rounded elements, and subtle animations to create a premium feel. These design choices not only make the app visually appealing but also contribute to a more engaging and enjoyable user journey. Whether you're exploring new features or revisiting familiar ones, ${gameName} consistently delivers a high-quality experience.`,
+
+                `For those who appreciate a well-crafted digital environment, ${gameName} sets a high standard. The development team has clearly prioritized user feedback, resulting in an app that feels refined and polished. Regular updates ensure that the platform remains fresh and relevant, with new features and improvements being added over time. The community around ${gameName} is also a testament to its quality, with users frequently praising its stability and ease of use. If you're looking for a reliable and enjoyable app, ${gameName} is definitely worth exploring.`
+            ];
+            return blocks[gameId % blocks.length];
+        }
+
+        function getAboutText(gameId, gameName) {
+            const themes = [
+                `${gameName} is a versatile gaming platform that caters to a wide audience. It combines engaging gameplay with a user-friendly interface, making it accessible to both newcomers and experienced players. The app's design emphasizes clarity and simplicity, ensuring that users can navigate through various sections without confusion. Whether you're interested in quick sessions or extended gameplay, ${gameName} provides the flexibility to suit your pace.`,
+
+                `As a well-rounded app, ${gameName} offers a comprehensive set of features that enhance the overall user experience. From its responsive controls to its visually appealing layout, every aspect of the app is crafted to deliver satisfaction. The platform also includes helpful guidance for new users, ensuring that everyone can get started without hassle. With a strong focus on quality and consistency, ${gameName} has earned a reputation as a dependable choice for entertainment.`,
+
+                `The appeal of ${gameName} lies in its ability to combine functionality with enjoyment. The app's structure is logical and intuitive, allowing users to quickly find what they're looking for. Visual elements are used effectively to guide attention and highlight important actions, creating a seamless flow from start to finish. Additionally, the app's performance is optimized for various devices, ensuring a smooth experience regardless of your hardware. ${gameName} truly delivers on its promise of quality gaming.`,
+
+                `For users seeking a premium gaming experience, ${gameName} stands out as a top contender. The app's attention to detail is evident in every aspect, from the smooth animations to the thoughtful placement of controls. The interface is clean and uncluttered, with a focus on usability that makes it easy to dive right in. Regular updates and community engagement further enhance the value of ${gameName}, making it a platform that continues to evolve and improve over time.`
+            ];
+            return themes[gameId % themes.length];
+        }
+
+        function getAccordionContent(gameId) {
+            return [
+                { title: "App Experience", content: `${appsData[gameId - 1].name} delivers a polished and enjoyable experience. The app is designed to be intuitive, with a clean interface that makes navigation effortless. Users can expect smooth performance, quick load times, and a visually appealing design that enhances every session. The overall flow of the app is logical and well-structured, ensuring that both new and returning users feel comfortable and engaged.` },
+                { title: "Navigation & Interface", content: `The interface of ${appsData[gameId - 1].name} is built with user convenience in mind. Menus are clearly labeled and organized, allowing for easy access to all features. The layout is responsive and adapts well to different screen sizes, making it suitable for both mobile and desktop use. Visual cues and feedback help guide users through actions, reducing the learning curve and making the app accessible to everyone.` },
+                { title: "Download Guidance", content: `To download ${appsData[gameId - 1].name}, simply tap the Download button on this page. You will be directed to the official download source provided by the app publisher. Always ensure you are downloading from a trusted source and verify the app's authenticity before installation. The download link is original and provided directly from the app's official channel.` },
+                { title: "Responsible Use", content: `While ${appsData[gameId - 1].name} offers an engaging experience, it's important to use the app responsibly. Set reasonable limits for your usage and be mindful of the time you spend. If the app involves real-money transactions, always play within your means and be aware of the risks involved. Enjoy the entertainment but prioritize your well-being and financial health.` }
+            ];
+        }
+
+        // ============================================================
+        // 5. NAVIGATION SYSTEM
+        // ============================================================
+        let currentPage = 'home';
+        let currentDetailsId = null;
+        const pageEls = {
+            home: document.getElementById('page-home'),
+            details: document.getElementById('page-details'),
+            about: document.getElementById('page-about'),
+            contact: document.getElementById('page-contact'),
+            disclaimer: document.getElementById('page-disclaimer'),
+            privacy: document.getElementById('page-privacy')
+        };
+
+        function navigateTo(page, data) {
+            // Hide all pages
+            Object.values(pageEls).forEach(el => el.classList.remove('active'));
+
+            if (page === 'home') {
+                pageEls.home.classList.add('active');
+                currentPage = 'home';
+                currentDetailsId = null;
+                document.querySelector('.logo-area').style.display = 'flex';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                updateNavActive('home');
+                return;
+            }
+
+            if (page === 'details' && data) {
+                pageEls.details.classList.add('active');
+                currentPage = 'details';
+                currentDetailsId = data;
+                renderDetails(data);
+                document.querySelector('.logo-area').style.display = 'flex';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                updateNavActive('details');
+                return;
+            }
+
+            // Static pages
+            if (pageEls[page]) {
+                pageEls[page].classList.add('active');
+                currentPage = page;
+                currentDetailsId = null;
+                document.querySelector('.logo-area').style.display = 'flex';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                updateNavActive(page);
+            }
+        }
+
+        function updateNavActive(page) {
+            document.querySelectorAll('.drawer-nav a').forEach(el => {
+                el.classList.toggle('active', el.dataset.page === page);
+            });
+        }
+
+        // ============================================================
+        // 6. RENDER HOME
+        // ============================================================
+        function renderHome() {
+            const grid = document.getElementById('homeGrid');
+            grid.innerHTML = '';
+            appsData.forEach((app, idx) => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+                card.innerHTML = `
+                    <div class="app-card-top">
+                        <span class="card-badge">#${app.id}</span>
+                        <div class="card-img-wrap">
+                            <img src="${app.image}" alt="${app.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+                            <div class="img-placeholder" style="display:none;"></div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-name">${app.name}</div>
+                        <div class="card-bonus">
+                            <svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+                            Sign Up Bonus <strong>${app.bonus}</strong>
+                        </div>
+                        <div class="card-withdrawal">
+                            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                            Min. Withdrawal <strong>₹100</strong>
+                        </div>
+                        <button class="card-btn" onclick="navigateTo('details', ${app.id})">
+                            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            Download
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ============================================================
+        // 7. RENDER DETAILS
+        // ============================================================
+        function renderDetails(gameId) {
+            const app = appsData.find(a => a.id === gameId);
+            if (!app) { navigateTo('home'); return; }
+
+            const container = document.getElementById('detailsContent');
+            const reviews = getReviewsForGame(gameId, app.name);
+            const accContent = getAccordionContent(gameId);
+
+            // unique download, size, votes
+            const dl = downloadsList[(gameId - 1) % downloadsList.length];
+            const sz = sizeList[(gameId - 1) % sizeList.length];
+            const vt = votesList[(gameId - 1) % votesList.length];
+
+            // related apps (all except current)
+            const related = appsData.filter(a => a.id !== gameId);
+
+            container.innerHTML = `
+                <!-- HERO -->
+                <div class="details-hero">
+                    <div class="details-hero-top">
+                        <div class="details-img">
+                            <img src="${app.image}" alt="${app.name}" loading="lazy" onerror="this.style.display='none'">
+                        </div>
+                        <div class="details-info">
+                            <div class="details-name">${app.name}</div>
+                            <div class="details-bonus-row">
+                                <svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+                                Sign Up Bonus <strong>${app.bonus}</strong>
+                            </div>
+                            <div class="details-withdrawal-row">
+                                <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+                                Min. Withdrawal <strong>₹100</strong>
+                            </div>
+                            <div class="details-stats">
+                                <span class="details-stat">📥 Downloads <strong>${dl}</strong></span>
+                                <span class="details-stat">📦 Size <strong>${sz}</strong></span>
+                                <span class="details-stat">⭐ Votes <strong>${vt}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="details-download-btn" onclick="window.open('${app.link}', '_blank')">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download ${app.name}
+                    </button>
+                </div>
+
+                <!-- INFO BAG -->
+                <div class="info-bag">
+                    <h3>
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                        About ${app.name}
+                    </h3>
+                    <p>${getInfoText(gameId, app.name)}</p>
+                </div>
+
+                <!-- ABOUT BAG -->
+                <div class="info-bag">
+                    <h3>
+                        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+                        ${app.name} — In-Depth
+                    </h3>
+                    <p>${getAboutText(gameId, app.name)}</p>
+                </div>
+
+                <!-- RELATED APPS -->
+                <div class="related-section">
+                    <h2>Other Apps & Games</h2>
+                    <div class="related-grid">
+                        ${related.map(r => `
+                            <div class="related-card">
+                                <div class="related-card-img">
+                                    <img src="${r.image}" alt="${r.name}" loading="lazy" onerror="this.style.display='none'">
+                                </div>
+                                <div class="related-card-body">
+                                    <div class="related-card-name">${r.name}</div>
+                                    <div class="related-card-bonus">
+                                        <svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg>
+                                        <strong>${r.bonus}</strong>
+                                    </div>
+                                    <button class="related-card-btn" onclick="navigateTo('details', ${r.id})">View Details</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- BEST INFO ACCORDION -->
+                <div class="best-info-section">
+                    <h2>Best Information</h2>
+                    ${accContent.map((item, idx) => `
+                        <div class="accordion-item" id="acc-${gameId}-${idx}">
+                            <div class="accordion-header" onclick="toggleAccordion('acc-${gameId}-${idx}')">
+                                <div class="accordion-header-left">
+                                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                                    <span>${item.title}</span>
+                                </div>
+                                <svg class="accordion-icon" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+                            </div>
+                            <div class="accordion-body">
+                                <p>${item.content}</p>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- REVIEWS -->
+                <div class="reviews-section">
+                    <h2>Ratings &amp; Player Reviews</h2>
+                    <div class="reviews-scroll" id="reviewScroll-${gameId}">
+                        ${reviews.map((rev, i) => `
+                            <div class="review-card">
+                                <div class="review-stars">
+                                    ${'<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>'.repeat(5)}
+                                </div>
+                                <p class="review-text">"${rev.text}"</p>
+                                <div class="review-divider"></div>
+                                <div class="review-author">
+                                    <div class="review-avatar">${rev.name.charAt(0)}</div>
+                                    <div class="review-author-info">
+                                        <div class="review-author-name">${rev.name}</div>
+                                        <div class="review-verified">
+                                            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                            Verified Gamer
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // 8. ACCORDION TOGGLE
+        // ============================================================
+        function toggleAccordion(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const isOpen = el.classList.contains('open');
+            // Close all siblings in the same section
+            const parent = el.parentElement;
+            if (parent) {
+                parent.querySelectorAll('.accordion-item').forEach(item => {
+                    if (item !== el) item.classList.remove('open');
+                });
+            }
+            if (isOpen) {
+                el.classList.remove('open');
+            } else {
+                el.classList.add('open');
+            }
+        }
+
+        // ============================================================
+        // 9. DRAWER CONTROLS
+        // ============================================================
+        const drawer = document.getElementById('drawer');
+        const overlay = document.getElementById('drawerOverlay');
+
+        function openDrawer() {
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('menuToggle').addEventListener('click', openDrawer);
+        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+        overlay.addEventListener('click', closeDrawer);
+
+        // Close drawer on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+        // ============================================================
+        // 10. INIT
+        // ============================================================
+        renderHome();
+        navigateTo('home');
+
+        // Handle back button for details navigation (basic)
+        window.addEventListener('popstate', (e) => {
+            if (currentPage === 'details' && currentDetailsId !== null) {
+                // If user goes back from details, go home
+                navigateTo('home');
+            }
+        });
+
+        // Push state on details navigation
+        const origNavigate = navigateTo;
+        navigateTo = function(page, data) {
+            if (page === 'details' && data) {
+                history.pushState({ page: 'details', id: data }, '', '#details-' + data);
+            } else if (page === 'home') {
+                history.pushState({ page: 'home' }, '', '#');
+            }
+            origNavigate(page, data);
+        };
+
+        // Handle initial hash
+        if (window.location.hash.startsWith('#details-')) {
+            const id = parseInt(window.location.hash.replace('#details-', ''));
+            if (!isNaN(id) && appsData.some(a => a.id === id)) {
+                navigateTo('details', id);
+            }
+        }
+
+        console.log('✅ GameHub loaded — 74 original apps/games');
+    </script>
 </body>
 </html>
