@@ -66,7 +66,9 @@
     display:flex;flex-direction:column;padding:18px 0;
   }
   .menu-drawer.show{transform:translateX(0);}
-  .menu-drawer .menu-title{font-weight:800;font-size:15px;padding:0 20px 14px 20px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+  .menu-drawer .menu-title{font-weight:800;font-size:15px;padding:0 20px 14px 20px;border-bottom:1px solid var(--border);margin-bottom:6px;display:flex;align-items:center;gap:12px;}
+  .menu-close-btn{background:none;border:none;padding:4px;margin:0;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#111827;border-radius:8px;flex-shrink:0;}
+  .menu-close-btn:active{background:var(--bg2);}
   .menu-item{
     display:flex;align-items:center;gap:14px;
     padding:13px 20px;cursor:pointer;font-weight:600;font-size:14.5px;color:var(--text);
@@ -199,7 +201,12 @@
 
 <div class="menu-backdrop" id="menuBackdrop"></div>
 <nav class="menu-drawer" id="menuDrawer" aria-label="Main menu">
-  <div class="menu-title">Menu</div>
+  <div class="menu-title">
+    <button class="menu-close-btn" id="menuCloseBtn" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="5" x2="19" y2="19"/><line x1="19" y1="5" x2="5" y2="19"/></svg>
+    </button>
+    <span>Menu</span>
+  </div>
   <div class="menu-item" data-page="home">
     <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg>
     Home
@@ -229,6 +236,27 @@
       <p>Browse the full directory and download the app you want.</p>
     </div>
     <div class="home-grid" id="homeGrid"></div>
+
+    <div class="bag" style="margin-top:22px;">
+      <h3>Getting Started</h3>
+      <p>Installing any app from this directory follows the same basic Android flow: tap Download on a listing such as YONO NEW APP or 567 SLOTS, allow the browser to finish saving the file, then open it from your downloads and confirm the standard "install from this source" permission if your phone asks for it — this prompt is a normal Android safety step, not something specific to any one app.</p>
+      <p>Opening an app for the first time, whether it's SAGA SLOTS, RUMMY LUDO, or any other listing here, usually leads to a short signup screen. Most apps ask for a mobile number first, then send a one-time OTP to confirm it — enter that code only inside the app itself, never to anyone who contacts you asking for it by phone, SMS, or chat.</p>
+      <p>New-user signup bonuses, like the ones shown on each card above, are typically credited automatically right after that first signup step completes — the exact figure and any conditions attached to it are set by the individual app, not by this directory, so it's worth a quick look at that app's own terms once you're signed in.</p>
+    </div>
+
+    <div class="bag">
+      <h3>Safety &amp; Responsible Use</h3>
+      <p>None of the apps listed here should ever need your OTP, password, or PIN repeated back to a caller, message, or email — treat any request like that as a scam attempt, regardless of which app it claims to be from.</p>
+      <p>Avoid sharing photos of identity documents unless you are inside an app's own verified KYC screen and the request is part of that app's normal account-verification flow; this directory never asks for that information and never needs it.</p>
+      <p>Real-money features carry genuine financial risk. No bonus, withdrawal, or outcome on any listed app is guaranteed, and it's worth only using money you can comfortably afford, especially while you're still learning how a new app works.</p>
+    </div>
+
+    <div class="bag">
+      <h3>Deposits, Withdrawals &amp; Support</h3>
+      <p>Deposits and withdrawals on these apps are usually processed quickly, but like any payment system they can occasionally run into technical hiccups or bank-side delays that are outside any app's direct control.</p>
+      <p>If a deposit or withdrawal seems stuck, most of these apps offer round-the-clock in-app customer support where the issue can be reported directly with your transaction details. Support teams generally look into it from there.</p>
+      <p>Resolution time varies by issue — some are sorted within hours, while others involving bank processing can reasonably take anywhere from one to seven days. This isn't a guarantee of any particular outcome, just a realistic range based on how these systems typically work.</p>
+    </div>
   </section>
 
   <section class="page" id="page-details">
@@ -244,7 +272,10 @@
     <div class="about-block">
       <h2 style="font-size:16px;margin:0 0 10px 0;">Contact</h2>
       <p>This directory exists to help you find and compare games and apps in one place. For questions about a specific game or app — such as an account issue, a bonus, or a withdrawal — the fastest path is that app's own in-app support, since each app manages its own accounts and payments independently of this site.</p>
-      <p>If you have feedback about this directory itself, such as an incorrect link or an outdated screenshot, general contact guidance will be added here as it becomes available.</p>
+      <p>Most of the apps listed here offer a help, support, or live-chat option reachable from within their own menu once you're signed in. That channel will always have more context about your specific account than this directory can, since it can see your actual signup date, transaction history, and account status directly.</p>
+      <p>If a question is about a deposit, a withdrawal, or a bonus not appearing as expected, it's worth having your mobile number and any transaction reference ready before reaching out to that app's support — this usually speeds up how quickly the issue is looked into.</p>
+      <p>If you have feedback about this directory itself, such as an incorrect link, an outdated screenshot, or a listing that no longer matches an app's current design, general contact guidance for reporting that will be added here as it becomes available.</p>
+      <p>This directory does not operate any of the listed apps and cannot access, change, or expedite anything inside another company's account system on a user's behalf — that responsibility always stays with the individual app.</p>
     </div>
   </section>
 
@@ -254,7 +285,10 @@
       <h2 style="font-size:16px;margin:0 0 10px 0;">Disclaimer</h2>
       <p>This website is an independent directory. Every image, name, and download link shown here is provided as information only, and every app or game listed is a separate third-party product operated by its own team.</p>
       <p>We do not control, and cannot guarantee, the accuracy, availability, or outcome of any third-party app. Real-money participation carries genuine financial risk, and results can never be guaranteed. Users are responsible for reading each app's own terms before installing or using it, and for confirming that any real-money feature is legal in their own state or region.</p>
-      <p>We do not process deposits or withdrawals, and we do not guarantee bonuses, winnings, approvals, or support outcomes of any kind for any listed app.</p>
+      <p>We do not process deposits or withdrawals, and we do not guarantee bonuses, winnings, approvals, or support outcomes of any kind for any listed app. Bonus figures, withdrawal minimums, and other numbers shown on this directory are display information provided by or observed from each app, and can change at any time at that app's own discretion.</p>
+      <p>Installing any app always carries some general responsibility on the user's part — checking that a device meets an app's requirements, reviewing requested permissions, and keeping the operating system reasonably up to date are all normal, sensible steps regardless of which app is being installed.</p>
+      <p>This directory is not affiliated with, endorsed by, or officially representing any of the apps listed, unless explicitly stated otherwise. Any trademarks, names, or images belong to their respective owners and are shown here solely for identification purposes within this directory.</p>
+      <p>Technical issues, delayed transactions, incorrect information display, or downtime on any third-party app are outside this directory's control and should be reported directly to that app's own support channel rather than to this site.</p>
     </div>
   </section>
 
@@ -264,6 +298,11 @@
       <h2 style="font-size:16px;margin:0 0 10px 0;">Privacy Policy</h2>
       <p>This directory does not ask for or store account passwords, OTP codes, or payment details. Basic technical data, such as which pages are viewed, may be collected automatically by standard web hosting tools to help keep the site running smoothly.</p>
       <p>Clicking a Download button takes you to a third-party app or its own website, which has its own separate privacy policy governing any information you provide there. We recommend reviewing each app's own privacy terms before creating an account.</p>
+      <p>No personal identity documents, KYC images, or bank account details are ever requested, stored, or handled by this directory at any stage — those are matters strictly between a user and the individual app they choose to install.</p>
+      <p>This directory does not use the information a person's mobile number, OTP, or in-app activity generates once they leave this site to install an app; from that point onward, that app's own privacy and data-handling practices apply.</p>
+      <p>If this site uses cookies or similar basic browser storage, it is limited to standard, low-impact purposes such as remembering a display preference or supporting normal page functionality — not for building profiles tied to real-money behaviour on any listed app.</p>
+      <p>Links to app store pages, official websites, or Telegram channels for individual games are provided purely for convenience. Once a user leaves this directory through one of those links, this privacy policy no longer applies, and the destination's own policy takes over.</p>
+      <p>Because every app listed here operates independently, users are encouraged to read that specific app's privacy policy in full — particularly its sections on data retention, third-party sharing, and account deletion — before submitting any personal information during signup.</p>
     </div>
   </section>
 </main>
@@ -392,34 +431,40 @@ function buildQuickNotes(i){
   const name = app.name;
   const bonus = bonusFor(i-1);
   const rnd = rngFor(i*131+7);
-  // Fixed 4 labels as requested: Security, Support, Withdrawals, Sign up.
-  // Wording still varies per app via seeded phrase pools so no two apps
-  // show identical text, even though the 4 headings are the same everywhere.
+  // 5 fixed labels: Security, Support, Withdrawals, Sign up, Bonus.
+  // Each line is a full paragraph, and wording varies per app via seeded
+  // phrase pools so no two apps show identical text under the same heading.
   const securityLines = [
-    `Never share an OTP or password for ${name} with anyone, including callers claiming to be support.`,
-    `${name} will never genuinely need your OTP or password read aloud to a caller — treat any such request as a scam.`,
-    `Keep OTPs, passwords and PINs for ${name} private; the app itself never needs them shared outside its own screens.`
+    `Never share an OTP, password, or PIN for ${name} with anyone — not by phone, SMS, or chat — even if the person claims to be from ${name}'s own support team. Genuine support staff never need that information read aloud to them, since every real action inside ${name} happens on your own device, not over a call. If a message ever asks you to "confirm" your ${name} account this way, the safest move is to ignore it and check the app directly instead.`,
+    `${name} will never genuinely need your OTP or password repeated to a caller; treat any such request as a scam attempt regardless of how official it sounds. If you ever receive a message asking for this information "to verify your ${name} account," it's safest to ignore it and check your account status directly inside the app instead. It's also worth avoiding any link that promises to "fix" your ${name} account outside the app itself.`,
+    `Keep OTPs, passwords, and PINs for ${name} private at all times — the app itself never asks for them outside its own official screens. A good habit is to only ever enter this information when you yourself opened ${name} directly, never through a link sent by someone else, and to double-check that you're on the genuine app before typing anything sensitive.`
   ];
   const supportLines = [
-    `Account or payment questions for ${name} are best handled through its own in-app support.`,
-    `${name} runs its own support channel — that is the right place for a deposit, withdrawal or account question.`,
-    `For anything specific to your ${name} account, its in-app support will have more context than this directory does.`
+    `Account or payment questions for ${name} are best handled through its own in-app support — for example, many apps like ${name} offer an official live chat option reachable from a help or profile menu, where you can describe the issue and attach relevant details such as a screenshot or transaction reference.`,
+    `${name} runs its own support channel, separate from this directory, and that channel is the right place for a deposit, withdrawal, or account question. Look for a help, support, or live chat option inside ${name}'s own menu, since agents there can see your actual account and transaction history and respond with specifics.`,
+    `For anything specific to your ${name} account, its own in-app support — often available as a live chat or help-ticket option — will have far more context than this listing does. Keep a note of any reference or transaction ID ${name} gives you, since it usually speeds up how quickly a query gets resolved by its team.`
   ];
   const withdrawalLines = [
-    `Minimum withdrawal listed for ${name} is ₹100, handled entirely within the app's own wallet section.`,
-    `${name} sets its own withdrawal process; the ₹100 minimum shown here comes directly from the app.`,
-    `Withdrawals from ${name} are processed by the app itself, with ₹100 as the listed minimum.`
+    `Minimum withdrawal listed for ${name} is ₹100, and the request is handled entirely within the app's own wallet section rather than through this directory. Deposits and withdrawals on ${name} are usually processed quickly, though occasional delays from bank-side processing or a brief technical issue are possible, as with any payment system.`,
+    `${name} sets its own withdrawal process, and the ₹100 minimum shown here comes directly from the app rather than being invented by this listing. If a withdrawal from ${name} seems to be taking longer than expected, its in-app support is the right place to raise it, since resolution can reasonably take anywhere from a few hours up to about a week depending on the cause.`,
+    `Withdrawals from ${name} are processed by the app itself, with ₹100 listed as the minimum amount. Most requests go through without issue, but if one is delayed by a technical or banking problem, reporting it through ${name}'s support along with your transaction details is the fastest path to a resolution, even if it occasionally takes a few days.`
   ];
   const signupLines = [
-    `${name} generally asks for a mobile number and an OTP to finish creating an account.`,
-    `Creating an account on ${name} typically starts with a mobile number, confirmed by an OTP.`,
-    `Signing up for ${name} follows the app's own short number-plus-OTP flow.`
+    `${name} generally asks for a mobile number and an OTP to finish creating an account — a fast, familiar flow for most Android users that usually takes well under a minute to complete from start to finish.`,
+    `Creating an account on ${name} typically starts with a mobile number, confirmed by an OTP, and takes only a minute or two for a new user before the main screen becomes available.`,
+    `Signing up for ${name} follows the app's own short number-plus-OTP flow, designed to get a new user into the app quickly without extra paperwork at this early stage.`
+  ];
+  const bonusLines = [
+    `The signup bonus of ₹${bonus} shown for ${name} is typically credited automatically once the first signup step is complete, based on the exact terms ${name} itself sets — it's worth a quick look at ${name}'s own bonus terms once you're signed in, since eligibility details can vary.`,
+    `That initial signup on ${name} is also usually what unlocks the ₹${bonus} welcome bonus currently shown on its listing above; the figure comes directly from ${name} and is not altered by this directory in any way.`,
+    `Once signup on ${name} is done, the ₹${bonus} new-user bonus shown here is generally applied by the app without extra steps required, though any conditions attached to using it are set entirely by ${name} rather than by this listing.`
   ];
   return [
     { h: 'Security', b: shuffle(securityLines, rnd)[0] },
     { h: 'Support', b: shuffle(supportLines, rnd)[0] },
     { h: 'Withdrawals', b: shuffle(withdrawalLines, rnd)[0] },
-    { h: 'Sign up', b: shuffle(signupLines, rnd)[0] }
+    { h: 'Sign up', b: shuffle(signupLines, rnd)[0] },
+    { h: 'Bonus', b: shuffle(bonusLines, rnd)[0] }
   ];
 }
 
@@ -567,7 +612,8 @@ function renderAbout(){
       <h2 style="font-size:16px;margin:0 0 10px 0;">About This Directory</h2>
       <p>This site is a simple directory of 74 game and app listings, each shown with its own image, signup bonus figure and download link. The goal is to make it easy to browse and compare apps in one place before installing anything.</p>
       <p>Every app listed here is an independent third-party product. This directory does not create accounts, does not process deposits or withdrawals, and does not collect OTPs or passwords for any of them.</p>
-      <p>Open any app's own page to see its full information, including its complete list of the other 73 apps in this directory.</p>
+      <p>Each app card on the Home Page shows the same basic details at a glance — its image, its current signup bonus, and its listed minimum withdrawal — so that comparing several apps before installing one doesn't require opening every listing individually.</p>
+      <p>Open any app's own page to see its full information, including its complete list of the other 73 apps in this directory, quick notes on security and support, and a short set of example player reviews.</p>
     </div>
   `;
   document.getElementById('aboutContent').innerHTML = html;
@@ -590,6 +636,7 @@ function openMenu(){ menuBackdrop.classList.add('show'); menuDrawer.classList.ad
 function closeMenu(){ menuBackdrop.classList.remove('show'); menuDrawer.classList.remove('show'); menuBtn.classList.remove('menu-open'); }
 menuBtn.addEventListener('click', () => { menuDrawer.classList.contains('show') ? closeMenu() : openMenu(); });
 menuBackdrop.addEventListener('click', closeMenu);
+document.getElementById('menuCloseBtn').addEventListener('click', closeMenu);
 document.querySelectorAll('.menu-item, footer [data-page]').forEach(el => {
   el.addEventListener('click', () => { showPage(el.dataset.page); closeMenu(); });
 });
