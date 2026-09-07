@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
-    <title>App & Game Directory</title>
+    <title>YONO Games - 74 Apps</title>
     <style>
-        /* ── RESET & BASE ── */
-        * {
+        /* ===== RESET & BASE ===== */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
         html {
             scroll-behavior: smooth;
@@ -19,8 +21,10 @@
             background: #F7F8FA;
             color: #111827;
             line-height: 1.5;
+            padding: 0;
+            margin: 0;
             -webkit-tap-highlight-color: transparent;
-            padding-top: 68px;
+            overflow-x: hidden;
         }
         a {
             text-decoration: none;
@@ -29,75 +33,67 @@
         img {
             display: block;
             max-width: 100%;
+            height: auto;
         }
         button {
-            cursor: pointer;
             font-family: inherit;
+            cursor: pointer;
             border: none;
-            background: none;
             outline: none;
+            background: none;
+            -webkit-tap-highlight-color: transparent;
         }
-
-        /* ── SCROLLBAR ── */
-        ::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
+        /* ===== UTILITY ===== */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0 16px 80px 16px;
+            background: #F7F8FA;
         }
-        ::-webkit-scrollbar-track {
-            background: #F1F1F1;
+        .hidden {
+            display: none !important;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #D1D5DB;
-            border-radius: 8px;
-        }
-
-        /* ── HEADER ── */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
+        /* ===== HEADER ===== */
+        .app-header {
             background: #FFFFFF;
+            padding: 16px 16px 12px 16px;
             border-bottom: 1px solid #E5E7EB;
-            padding: 12px 18px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
         }
-        .header-title {
-            font-weight: 700;
+        .app-header .logo {
             font-size: 20px;
-            letter-spacing: -0.3px;
+            font-weight: 700;
             color: #111827;
+            letter-spacing: -0.3px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .header-title svg {
+        .app-header .logo span {
+            color: #16A34A;
+        }
+        .app-header .logo svg {
             width: 28px;
             height: 28px;
         }
-        .header-title span {
-            background: linear-gradient(135deg, #16A34A, #15803D);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
         .menu-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #F7F8FA;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            background: #F1F5F9;
-            transition: background 0.2s;
+            transition: 0.2s;
         }
         .menu-btn:active {
-            background: #E2E8F0;
+            background: #E5E7EB;
         }
         .menu-btn svg {
             width: 24px;
@@ -106,110 +102,110 @@
             stroke-width: 2;
             fill: none;
         }
-
-        /* ── DRAWER ── */
-        .drawer-overlay {
+        /* ===== SIDEBAR MENU ===== */
+        .menu-overlay {
             position: fixed;
             inset: 0;
-            z-index: 2000;
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 200;
             opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
-        .drawer-overlay.open {
+        .menu-overlay.open {
             opacity: 1;
-            visibility: visible;
+            pointer-events: all;
         }
-        .drawer {
+        .menu-panel {
             position: fixed;
             top: 0;
-            right: -320px;
-            width: 300px;
-            max-width: 85vw;
+            left: -300px;
+            width: 280px;
+            max-width: 80%;
             height: 100%;
-            z-index: 2001;
             background: #FFFFFF;
-            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
-            transition: right 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-            padding: 20px 18px;
-            display: flex;
-            flex-direction: column;
+            z-index: 210;
+            padding: 24px 20px;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+            transition: left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
             overflow-y: auto;
         }
-        .drawer.open {
-            right: 0;
+        .menu-panel.open {
+            left: 0;
         }
-        .drawer-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 18px;
-            border-bottom: 1px solid #F1F5F9;
-            margin-bottom: 20px;
-        }
-        .drawer-header h2 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111827;
-        }
-        .drawer-close {
+        .menu-panel .close-btn {
             width: 40px;
             height: 40px;
-            border-radius: 10px;
-            background: #F1F5F9;
+            border-radius: 50%;
+            background: #F7F8FA;
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-left: auto;
+            margin-bottom: 28px;
+            transition: 0.2s;
         }
-        .drawer-close svg {
-            width: 20px;
-            height: 20px;
+        .menu-panel .close-btn:active {
+            background: #E5E7EB;
+        }
+        .menu-panel .close-btn svg {
+            width: 22px;
+            height: 22px;
             stroke: #111827;
             stroke-width: 2;
             fill: none;
         }
-        .drawer-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex: 1;
+        .menu-panel .menu-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 24px;
+            letter-spacing: -0.2px;
         }
-        .drawer-nav a {
+        .menu-panel .menu-title span {
+            color: #16A34A;
+        }
+        .menu-item {
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 14px 16px;
+            padding: 14px 12px;
             border-radius: 12px;
+            color: #111827;
             font-size: 16px;
             font-weight: 500;
-            color: #1F2937;
-            transition: background 0.2s;
+            transition: 0.2s;
+            margin-bottom: 4px;
         }
-        .drawer-nav a:active {
-            background: #F1F5F9;
+        .menu-item:active {
+            background: #F7F8FA;
         }
-        .drawer-nav a svg {
+        .menu-item svg {
             width: 22px;
             height: 22px;
-            stroke: #4B5563;
+            stroke: #6B7280;
             stroke-width: 1.8;
             fill: none;
             flex-shrink: 0;
         }
-        .drawer-footer {
-            padding-top: 18px;
-            border-top: 1px solid #F1F5F9;
-            font-size: 12px;
-            color: #9CA3AF;
-            text-align: center;
+        .menu-item .badge {
+            margin-left: auto;
+            background: #16A34A;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 20px;
         }
-
-        /* ── PAGES ── */
+        .menu-divider {
+            height: 1px;
+            background: #E5E7EB;
+            margin: 12px 0;
+        }
+        /* ===== PAGE VIEWS ===== */
         .page {
             display: none;
             animation: fadeUp 0.3s ease;
-            padding: 0 0 80px 0;
         }
         .page.active {
             display: block;
@@ -224,1876 +220,1300 @@
                 transform: translateY(0);
             }
         }
-
-        .page-inner {
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 0 16px;
-        }
-
-        /* ── HOME ── */
-        .home-header {
-            padding: 20px 0 8px 0;
-        }
-        .home-header h1 {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+        /* ===== HOME PAGE ===== */
+        .home-title {
+            padding: 16px 0 8px 0;
+            font-size: 22px;
+            font-weight: 700;
             color: #111827;
+            letter-spacing: -0.3px;
         }
-        .home-header p {
+        .home-title span {
+            color: #16A34A;
+        }
+        .home-sub {
+            font-size: 14px;
             color: #6B7280;
-            font-size: 15px;
-            margin-top: 4px;
+            margin-bottom: 16px;
         }
-        .home-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-            padding: 12px 0 20px 0;
-        }
-
-        /* ── CARD (HOME) ── */
-        .card {
+        /* ===== APP CARD (HOME & RELATED) ===== */
+        .app-card {
             background: #FFFFFF;
             border-radius: 16px;
+            padding: 16px 16px 18px 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
             border: 1px solid #E5E7EB;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            overflow: hidden;
-            transition: transform 0.15s, box-shadow 0.15s;
-            position: relative;
-            padding: 12px 12px 14px 12px;
+            transition: 0.15s;
+        }
+        .app-card:active {
+            transform: scale(0.995);
+        }
+        .app-card .card-top {
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
         }
-        .card:active {
-            transform: scale(0.98);
-        }
-        .card-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #16A34A;
-            color: #FFFFFF;
-            font-size: 10px;
-            font-weight: 700;
-            width: 24px;
-            height: 24px;
+        .app-card .number-badge {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
+            background: #16A34A;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 6px rgba(22, 163, 74, 0.35);
-            z-index: 2;
+            box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
         }
-        .card-img-wrap {
+        .app-card .card-img-wrap {
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
             border-radius: 12px;
             overflow: hidden;
-            background: #F3F4F6;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 10px;
-            position: relative;
+            background: #F7F8FA;
+            border: 1px solid #E5E7EB;
         }
-        .card-img-wrap img {
+        .app-card .card-img-wrap img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        .card-name {
-            font-weight: 700;
-            font-size: 14px;
+        .app-card .card-name {
+            font-size: 16px;
+            font-weight: 600;
             color: #111827;
             line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-bottom: 6px;
-            min-height: 36px;
+            flex: 1;
+            word-break: break-word;
         }
-        .card-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            font-size: 12px;
-            color: #4B5563;
-            margin-bottom: 10px;
+        .app-card .card-body {
+            padding-left: 44px;
         }
-        .card-info-row {
+        .app-card .info-row {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            font-size: 13px;
+            color: #6B7280;
+            margin-bottom: 5px;
         }
-        .card-info-row svg {
-            width: 14px;
-            height: 14px;
+        .app-card .info-row svg {
+            width: 16px;
+            height: 16px;
             flex-shrink: 0;
             stroke: #6B7280;
+            stroke-width: 1.8;
             fill: none;
-            stroke-width: 2;
         }
-        .card-info-row .bonus-amount {
+        .app-card .info-row .bonus-text {
             color: #F59E0B;
-            font-weight: 700;
+            font-weight: 600;
         }
-        .card-btn {
-            width: 100%;
-            padding: 10px 0;
-            background: linear-gradient(135deg, #16A34A, #15803D);
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 14px;
-            border-radius: 10px;
-            transition: opacity 0.2s, transform 0.1s;
-            text-align: center;
-            margin-top: auto;
-            display: flex;
+        .app-card .info-row .bonus-text strong {
+            color: #111827;
+        }
+        .app-card .info-row .min-text {
+            color: #6B7280;
+        }
+        .app-card .download-btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-        }
-        .card-btn:active {
-            opacity: 0.85;
-            transform: scale(0.97);
-        }
-        .card-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: #FFFFFF;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        /* ── DETAILS ── */
-        .details-top {
-            background: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #E5E7EB;
-            padding: 20px 18px 18px 18px;
-            margin-top: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-        .details-img-wrap {
-            border-radius: 16px;
-            overflow: hidden;
-            background: #F3F4F6;
-            aspect-ratio: 16/9;
-            margin-bottom: 16px;
-        }
-        .details-img-wrap img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .details-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #111827;
-            margin-bottom: 6px;
-        }
-        .details-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            font-size: 14px;
-            color: #4B5563;
-            margin-bottom: 14px;
-        }
-        .details-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .details-meta-item svg {
-            width: 16px;
-            height: 16px;
-            stroke: #6B7280;
-            fill: none;
-            stroke-width: 2;
-            flex-shrink: 0;
-        }
-        .details-meta-item .bonus-amount {
-            color: #F59E0B;
-            font-weight: 700;
-        }
-        .details-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 24px;
-            background: #F7F8FA;
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 16px;
-            font-size: 13px;
-            color: #4B5563;
-        }
-        .details-stats span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .details-stats svg {
-            width: 16px;
-            height: 16px;
-            stroke: #6B7280;
-            fill: none;
-            stroke-width: 2;
-        }
-        .details-download-btn {
-            width: 100%;
-            padding: 14px 0;
-            background: linear-gradient(135deg, #16A34A, #15803D);
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 18px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: opacity 0.2s, transform 0.1s;
-            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.3);
-        }
-        .details-download-btn:active {
-            opacity: 0.85;
-            transform: scale(0.97);
-        }
-        .details-download-btn svg {
-            width: 22px;
-            height: 22px;
-            stroke: #FFFFFF;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        /* ── INFO BAG ── */
-        .info-bag {
-            background: #FFFFFF;
-            border-radius: 20px;
-            border: 1px solid #E5E7EB;
-            padding: 18px 18px 16px 18px;
-            margin-top: 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-        }
-        .info-bag h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .info-bag h3 svg {
-            width: 22px;
-            height: 22px;
-            stroke: #16A34A;
-            fill: none;
-            stroke-width: 2;
-        }
-        .info-bag p {
-            color: #4B5563;
-            font-size: 15px;
-            line-height: 1.7;
-        }
-        .info-bag p:not(:last-child) {
-            margin-bottom: 12px;
-        }
-
-        /* ── RELATED ── */
-        .related-section {
-            margin-top: 24px;
-        }
-        .related-section h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 14px;
-            padding-left: 4px;
-        }
-        .related-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-        .related-card {
-            background: #FFFFFF;
-            border-radius: 14px;
-            border: 1px solid #E5E7EB;
-            padding: 12px 12px 14px 12px;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.15s;
-        }
-        .related-card:active {
-            transform: scale(0.97);
-        }
-        .related-card .card-img-wrap {
-            aspect-ratio: 16/9;
-            border-radius: 10px;
-            margin-bottom: 8px;
-        }
-        .related-card .card-name {
-            font-size: 13px;
-            min-height: 30px;
-            margin-bottom: 4px;
-        }
-        .related-card .card-info {
-            font-size: 11px;
-            gap: 2px;
-            margin-bottom: 8px;
-        }
-        .related-card .card-btn {
-            font-size: 12px;
-            padding: 8px 0;
-            border-radius: 8px;
-        }
-
-        /* ── ACCORDION ── */
-        .accordion-wrap {
-            margin-top: 18px;
-        }
-        .accordion-item {
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 14px;
-            margin-bottom: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-        }
-        .accordion-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-            user-select: none;
-            gap: 12px;
-        }
-        .accordion-head:active {
-            background: #F7F8FA;
-        }
-        .accordion-head h4 {
-            font-size: 15px;
-            font-weight: 600;
-            color: #111827;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-        }
-        .accordion-head h4 svg {
-            width: 20px;
-            height: 20px;
-            stroke: #16A34A;
-            fill: none;
-            stroke-width: 2;
-            flex-shrink: 0;
-        }
-        .accordion-head .acc-icon {
-            width: 24px;
-            height: 24px;
-            stroke: #6B7280;
-            fill: none;
-            stroke-width: 2;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-        }
-        .accordion-head .acc-icon.open {
-            transform: rotate(180deg);
-        }
-        .accordion-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.22, 1, 0.36, 1), padding 0.3s ease;
-            padding: 0 16px;
-        }
-        .accordion-body.open {
-            max-height: 800px;
-            padding: 0 16px 18px 16px;
-        }
-        .accordion-body p {
-            color: #4B5563;
-            font-size: 14px;
-            line-height: 1.7;
-        }
-
-        /* ── REVIEWS CAROUSEL ── */
-        .reviews-section {
-            margin-top: 24px;
-        }
-        .reviews-section h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 14px;
-            padding-left: 4px;
-        }
-        .reviews-scroll {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 4px 4px 16px 4px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-        }
-        .reviews-scroll::-webkit-scrollbar {
-            height: 4px;
-        }
-        .reviews-scroll::-webkit-scrollbar-thumb {
-            background: #D1D5DB;
-            border-radius: 8px;
-        }
-        .review-card {
-            flex: 0 0 280px;
-            max-width: 85vw;
-            background: #FFFFFF;
-            border: 1px solid #E5E7EB;
-            border-radius: 18px;
-            padding: 18px 16px 16px 16px;
-            scroll-snap-align: start;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-            display: flex;
-            flex-direction: column;
-        }
-        .review-stars {
-            display: flex;
-            gap: 2px;
-            margin-bottom: 10px;
-        }
-        .review-stars svg {
-            width: 18px;
-            height: 18px;
-            fill: #F59E0B;
-            stroke: none;
-        }
-        .review-text {
-            font-size: 14px;
-            color: #1F2937;
-            line-height: 1.6;
-            margin-bottom: 12px;
-            flex: 1;
-        }
-        .review-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-top: 1px solid #F1F5F9;
-            padding-top: 12px;
-        }
-        .review-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            margin-top: 10px;
+            padding: 10px 22px;
             background: #16A34A;
-            color: #FFFFFF;
-            font-weight: 700;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .review-avatar.bg2 {
-            background: #3B82F6;
-        }
-        .review-avatar.bg3 {
-            background: #8B5CF6;
-        }
-        .review-avatar.bg4 {
-            background: #EC4899;
-        }
-        .review-avatar.bg5 {
-            background: #F59E0B;
-        }
-        .review-name-wrap {
-            display: flex;
-            flex-direction: column;
-        }
-        .review-name {
+            color: #fff;
+            font-size: 14px;
             font-weight: 600;
-            font-size: 14px;
-            color: #111827;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            border-radius: 30px;
+            transition: 0.2s;
+            box-shadow: 0 2px 10px rgba(22, 163, 74, 0.25);
+            width: 100%;
+            max-width: 200px;
+            border: none;
+            letter-spacing: 0.3px;
         }
-        .review-name svg {
-            width: 16px;
-            height: 16px;
-            stroke: #16A34A;
-            fill: none;
+        .app-card .download-btn:active {
+            background: #15803D;
+            transform: scale(0.97);
+        }
+        .app-card .download-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: #fff;
             stroke-width: 2;
+            fill: none;
         }
-        .review-verified {
-            font-size: 12px;
-            color: #6B7280;
-        }
-
-        /* ── STATIC PAGES ── */
-        .static-page {
-            padding: 20px 0 40px 0;
-        }
-        .static-page h1 {
-            font-size: 26px;
-            font-weight: 800;
-            color: #111827;
-            margin-bottom: 16px;
-        }
-        .static-page h2 {
-            font-size: 18px;
-            font-weight: 700;
-            color: #111827;
-            margin: 20px 0 10px 0;
-        }
-        .static-page p {
-            color: #4B5563;
-            font-size: 15px;
-            line-height: 1.8;
-            margin-bottom: 14px;
-        }
-        .static-page ul {
-            color: #4B5563;
-            font-size: 15px;
-            line-height: 1.8;
-            padding-left: 22px;
-            margin-bottom: 14px;
-        }
-
-        /* ── FOOTER ── */
-        .footer {
-            background: #FFFFFF;
-            border-top: 1px solid #E5E7EB;
-            padding: 24px 16px 20px 16px;
-            margin-top: 30px;
-            text-align: center;
-        }
-        .footer-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 12px 20px;
-            margin-bottom: 14px;
-        }
-        .footer-links a {
-            font-size: 14px;
-            color: #4B5563;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .footer-links a:active {
-            color: #16A34A;
-        }
-        .footer-copy {
-            font-size: 13px;
-            color: #9CA3AF;
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (min-width: 480px) {
-            .home-grid {
-                gap: 18px;
-            }
-            .related-grid {
-                gap: 18px;
-            }
-        }
-        @media (min-width: 640px) {
-            .home-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-            .related-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-            .review-card {
-                flex: 0 0 300px;
-            }
-        }
-        @media (min-width: 900px) {
-            .home-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            .related-grid {
-                grid-template-columns: 1fr 1fr 1fr 1fr;
-            }
-            .page-inner {
-                max-width: 960px;
-            }
-        }
-        @media (max-width: 380px) {
-            .home-grid {
-                gap: 10px;
-            }
-            .card {
-                padding: 10px 10px 12px 10px;
-            }
-            .card-name {
-                font-size: 12px;
-                min-height: 30px;
-            }
-            .card-info {
-                font-size: 10px;
-            }
-            .card-btn {
-                font-size: 12px;
-                padding: 8px 0;
-            }
-            .related-card .card-name {
-                font-size: 11px;
-            }
-        }
-
-        /* ── UTILITY ── */
-        .mt-8 {
-            margin-top: 8px;
-        }
-        .mt-12 {
-            margin-top: 12px;
-        }
-        .mt-16 {
-            margin-top: 16px;
-        }
-        .text-center {
-            text-align: center;
-        }
-        .text-muted {
-            color: #6B7280;
-        }
-        .gap-4 {
-            gap: 4px;
-        }
-        .flex {
-            display: flex;
-        }
-        .items-center {
-            align-items: center;
-        }
-
-        /* ── BACK BUTTON ── */
-        .back-btn {
+        /* ===== DETAILS PAGE ===== */
+        .details-back {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 14px;
-            border-radius: 10px;
-            background: #F1F5F9;
-            font-weight: 600;
             font-size: 14px;
-            color: #1F2937;
+            font-weight: 500;
+            color: #6B7280;
+            padding: 10px 0 6px 0;
+            transition: 0.2s;
+        }
+        .details-back:active {
+            color: #16A34A;
+        }
+        .details-back svg {
+            width: 20px;
+            height: 20px;
+            stroke: #6B7280;
+            stroke-width: 2;
+            fill: none;
+        }
+        .details-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 20px 16px 22px 16px;
+            margin-bottom: 16px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .details-card .detail-img-wrap {
+            width: 100%;
+            max-width: 200px;
+            margin: 0 auto 16px auto;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #F7F8FA;
+            border: 1px solid #E5E7EB;
+        }
+        .details-card .detail-img-wrap img {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1/1;
+            object-fit: cover;
+            display: block;
+        }
+        .details-card .detail-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
             margin-bottom: 12px;
-            transition: background 0.2s;
+            letter-spacing: -0.2px;
         }
-        .back-btn:active {
-            background: #E2E8F0;
+        .details-card .detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
         }
-        .back-btn svg {
+        .details-card .detail-info .info-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #6B7280;
+            padding: 4px 0;
+        }
+        .details-card .detail-info .info-row svg {
             width: 18px;
             height: 18px;
-            stroke: #1F2937;
+            flex-shrink: 0;
+            stroke: #6B7280;
+            stroke-width: 1.8;
             fill: none;
+        }
+        .details-card .detail-info .info-row .bonus-text {
+            color: #F59E0B;
+            font-weight: 600;
+        }
+        .details-card .detail-download-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px 20px;
+            background: #16A34A;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            box-shadow: 0 2px 12px rgba(22, 163, 74, 0.3);
+            transition: 0.2s;
+            border: none;
+            letter-spacing: 0.3px;
+        }
+        .details-card .detail-download-btn:active {
+            background: #15803D;
+            transform: scale(0.97);
+        }
+        .details-card .detail-download-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
             stroke-width: 2;
+            fill: none;
+        }
+        /* ===== A-to-Z TAGS ===== */
+        .tags-section {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 16px 14px 18px 14px;
+            margin-bottom: 16px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .tags-section .tags-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 12px;
+            letter-spacing: -0.1px;
+        }
+        .tags-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 8px;
+        }
+        .tags-wrap .tag {
+            background: #F7F8FA;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #6B7280;
+            border: 1px solid #E5E7EB;
+            transition: 0.15s;
+            letter-spacing: 0.2px;
+        }
+        .tags-wrap .tag:active {
+            background: #E5E7EB;
+        }
+        /* ===== RELATED APPS ===== */
+        .related-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827;
+            margin: 20px 0 12px 0;
+            letter-spacing: -0.2px;
+        }
+        .related-title span {
+            color: #16A34A;
+        }
+        /* ===== STATIC PAGES (About, Contact, etc) ===== */
+        .static-page {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 24px 18px;
+            border: 1px solid #E5E7EB;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+        }
+        .static-page h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px;
+        }
+        .static-page h2 span {
+            color: #16A34A;
+        }
+        .static-page p {
+            color: #6B7280;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        .static-page p:last-child {
+            margin-bottom: 0;
+        }
+        /* ===== FOOTER ===== */
+        .app-footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E5E7EB;
+            padding: 20px 16px 28px 16px;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .app-footer .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px 18px;
+            margin-bottom: 12px;
+        }
+        .app-footer .footer-links a {
+            font-size: 13px;
+            color: #6B7280;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .app-footer .footer-links a:active {
+            color: #16A34A;
+        }
+        .app-footer .footer-copy {
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 12px 70px 12px;
+            }
+            .app-header {
+                padding: 12px 12px 10px 12px;
+            }
+            .app-header .logo {
+                font-size: 18px;
+            }
+            .app-card {
+                padding: 14px 12px 16px 12px;
+            }
+            .app-card .card-img-wrap {
+                width: 54px;
+                height: 54px;
+            }
+            .app-card .card-name {
+                font-size: 14px;
+            }
+            .app-card .card-body {
+                padding-left: 0;
+            }
+            .app-card .download-btn {
+                max-width: 100%;
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+            .details-card .detail-img-wrap {
+                max-width: 150px;
+            }
+            .details-card .detail-name {
+                font-size: 18px;
+            }
+            .menu-panel {
+                width: 260px;
+                padding: 20px 16px;
+            }
+        }
+        @media (min-width: 768px) {
+            .container {
+                max-width: 640px;
+            }
+            .app-card .download-btn {
+                max-width: 240px;
+            }
+        }
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 680px;
+            }
+        }
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F7F8FA;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D5DB;
+            border-radius: 4px;
+        }
+        /* ===== LOADING SHIMMER ===== */
+        .shimmer {
+            animation: shimmer 1.2s ease-in-out infinite;
+            background: linear-gradient(90deg, #F7F8FA 30%, #EDEDF0 50%, #F7F8FA 70%);
+            background-size: 200% 100%;
+        }
+        @keyframes shimmer {
+            0% {
+                background-position: -200% 0;
+            }
+            100% {
+                background-position: 200% 0;
+            }
+        }
+        /* ===== SAFE AREA ===== */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+            }
+        }
+        /* ===== BADGE PULSE ===== */
+        .pulse-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #16A34A;
+            margin-left: 6px;
+            animation: pulse 1.8s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ─── HEADER ─── -->
-    <header class="header" role="banner">
-        <div class="header-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-            <span>AppHub</span>
+    <!-- ===== HEADER ===== -->
+    <header class="app-header" id="mainHeader">
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+            </svg>
+            YONO<span>Games</span>
         </div>
-        <button class="menu-btn" id="menuBtn" aria-label="Open menu">
-            <svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <button class="menu-btn" id="menuOpenBtn" aria-label="Open menu">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="20" y2="18" />
+            </svg>
         </button>
     </header>
 
-    <!-- ─── DRAWER ─── -->
-    <div class="drawer-overlay" id="drawerOverlay"></div>
-    <nav class="drawer" id="drawer" role="navigation" aria-label="Main navigation">
-        <div class="drawer-header">
-            <h2>Menu</h2>
-            <button class="drawer-close" id="drawerClose" aria-label="Close menu">
-                <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-            </button>
+    <!-- ===== MENU OVERLAY ===== -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- ===== MENU PANEL ===== -->
+    <nav class="menu-panel" id="menuPanel" role="navigation" aria-label="Main navigation">
+        <button class="close-btn" id="menuCloseBtn" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+        </button>
+        <div class="menu-title">YONO<span>Games</span></div>
+        <div class="menu-item" data-page="home">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" />
+            </svg>
+            Home
+            <span class="badge">74</span>
         </div>
-        <div class="drawer-nav">
-            <a href="#" data-page="home">
-                <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                Home
-            </a>
-            <a href="#" data-page="about">
-                <svg viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                About
-            </a>
-            <a href="#" data-page="contact">
-                <svg viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                Contact
-            </a>
-            <a href="#" data-page="disclaimer">
-                <svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                Disclaimer
-            </a>
-            <a href="#" data-page="privacy">
-                <svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                Privacy Policy
-            </a>
+        <div class="menu-divider"></div>
+        <div class="menu-item" data-page="about">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+            </svg>
+            About
         </div>
-        <div class="drawer-footer">© 2026 AppHub</div>
+        <div class="menu-item" data-page="contact">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
+            </svg>
+            Contact
+        </div>
+        <div class="menu-item" data-page="disclaimer">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="M12 8v4" />
+                <path d="M12 16h.01" />
+            </svg>
+            Disclaimer
+        </div>
+        <div class="menu-item" data-page="privacy">
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0110 0v4" />
+            </svg>
+            Privacy Policy
+        </div>
     </nav>
 
-    <!-- ─── MAIN ─── -->
-    <main>
+    <!-- ===== MAIN CONTAINER ===== -->
+    <main class="container" id="mainContainer">
 
-        <!-- ── HOME PAGE ── -->
+        <!-- ===== HOME PAGE ===== -->
         <section class="page active" id="page-home">
-            <div class="page-inner">
-                <div class="home-header">
-                    <h1>All Apps &amp; Games</h1>
-                    <p>74 premium titles · Download &amp; play</p>
-                </div>
-                <div class="home-grid" id="homeGrid"></div>
-            </div>
-            <footer class="footer">
-                <div class="footer-links">
-                    <a href="#" data-page="home">Home</a>
-                    <a href="#" data-page="about">About</a>
-                    <a href="#" data-page="contact">Contact</a>
-                    <a href="#" data-page="disclaimer">Disclaimer</a>
-                    <a href="#" data-page="privacy">Privacy</a>
-                </div>
-                <div class="footer-copy">© 2026 AppHub · All third-party apps are the property of their respective owners.</div>
-            </footer>
+            <div class="home-title">All <span>Games</span> &amp; Apps</div>
+            <div class="home-sub">74 premium games — one below another</div>
+            <div id="homeAppList"></div>
         </section>
 
-        <!-- ── DETAILS PAGE ── -->
+        <!-- ===== DETAILS PAGE ===== -->
         <section class="page" id="page-details">
-            <div class="page-inner" id="detailsContainer"></div>
-            <footer class="footer">
-                <div class="footer-links">
-                    <a href="#" data-page="home">Home</a>
-                    <a href="#" data-page="about">About</a>
-                    <a href="#" data-page="contact">Contact</a>
-                    <a href="#" data-page="disclaimer">Disclaimer</a>
-                    <a href="#" data-page="privacy">Privacy</a>
-                </div>
-                <div class="footer-copy">© 2026 AppHub · All third-party apps are the property of their respective owners.</div>
-            </footer>
+            <button class="details-back" id="detailsBackBtn">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6" />
+                </svg>
+                Back to all
+            </button>
+            <div id="detailsContent"></div>
         </section>
 
-        <!-- ── ABOUT ── -->
+        <!-- ===== ABOUT PAGE ===== -->
         <section class="page" id="page-about">
-            <div class="page-inner static-page">
-                <h1>About AppHub</h1>
-                <p>AppHub is a carefully curated directory of mobile applications and games. Our goal is to provide a clean, user-friendly platform where you can discover a wide variety of apps across multiple categories including slots, rummy, teen patti, card games, and more.</p>
-                <p>We believe in simplicity and transparency. Every app listed on our platform is presented with its original name, image, and download link — exactly as provided by the developers. We do not modify or replace any app data.</p>
-                <h2>Our Purpose</h2>
-                <p>AppHub serves as a bridge between users and application developers. Whether you are looking for a new gaming experience or a utility app, our directory helps you find what you need quickly and efficiently.</p>
-                <h2>Navigation</h2>
-                <p>Use the menu button in the top-right corner to navigate between pages. The Home page displays all 74 apps in a clean card layout. Tap or click the Download button on any card to view detailed information about that app, including the original download link.</p>
-                <h2>User Experience</h2>
-                <p>Our platform is built with a mobile-first approach, ensuring smooth performance on Android devices, tablets, and desktops. The white premium theme offers a bright, modern, and easy-to-read interface.</p>
+            <div class="static-page">
+                <h2>About <span>YONO Games</span></h2>
+                <p>YONO Games is a premium directory of the best online gaming and casino apps in India. We curate and list only the most trusted, high-paying platforms including Rummy, Slots, Teen Patti, Bingo, and more.</p>
+                <p>Our mission is to provide players with a safe, transparent, and easy way to discover new gaming apps with the best sign-up bonuses and withdrawal terms. Every app listed is verified for fair play and secure transactions.</p>
+                <p>With 74+ apps and growing, YONO Games is your one-stop destination for online gaming excellence.</p>
             </div>
-            <footer class="footer">
-                <div class="footer-links">
-                    <a href="#" data-page="home">Home</a>
-                    <a href="#" data-page="about">About</a>
-                    <a href="#" data-page="contact">Contact</a>
-                    <a href="#" data-page="disclaimer">Disclaimer</a>
-                    <a href="#" data-page="privacy">Privacy</a>
-                </div>
-                <div class="footer-copy">© 2026 AppHub</div>
-            </footer>
         </section>
 
-        <!-- ── CONTACT ── -->
+        <!-- ===== CONTACT PAGE ===== -->
         <section class="page" id="page-contact">
-            <div class="page-inner static-page">
-                <h1>Contact</h1>
-                <p>If you have any questions, feedback, or concerns regarding the apps or games listed on AppHub, we encourage you to reach out to us through the appropriate channels.</p>
-                <h2>Support</h2>
-                <p>For issues related to a specific application, please contact the app developer directly using the contact information provided within the app or on their official website.</p>
-                <h2>General Inquiries</h2>
-                <p>For general questions about AppHub, our directory, or the content we present, please use the contact form or email address provided on our platform. We aim to respond to all inquiries within 48 hours.</p>
-                <h2>Responsible Communication</h2>
-                <p>We are committed to providing a safe and respectful environment for all users. Please ensure that any communication is constructive and related to the content or functionality of our platform.</p>
-                <p class="text-muted mt-16">AppHub does not provide direct customer support for third-party applications. Please refer to the app's official support channels for assistance with downloads, accounts, or in-app issues.</p>
+            <div class="static-page">
+                <h2>Contact <span>Us</span></h2>
+                <p>Have questions, feedback, or suggestions? We'd love to hear from you. Reach out to our support team and we'll get back to you as soon as possible.</p>
+                <p><strong>Email:</strong> support@yonogames.in</p>
+                <p><strong>Response Time:</strong> Within 24 hours</p>
+                <p>For partnership inquiries or app listing requests, please use the same email with "Partnership" in the subject line.</p>
             </div>
-            <footer class="footer">
-                <div class="footer-links">
-                    <a href="#" data-page="home">Home</a>
-                    <a href="#" data-page="about">About</a>
-                    <a href="#" data-page="contact">Contact</a>
-                    <a href="#" data-page="disclaimer">Disclaimer</a>
-                    <a href="#" data-page="privacy">Privacy</a>
-                </div>
-                <div class="footer-copy">© 2026 AppHub</div>
-            </footer>
         </section>
 
-        <!-- ── DISCLAIMER ── -->
+        <!-- ===== DISCLAIMER PAGE ===== -->
         <section class="page" id="page-disclaimer">
-            <div class="page-inner static-page">
-                <h1>Disclaimer</h1>
-                <p>AppHub is a directory platform that provides information about third-party mobile applications and games. We do not host, distribute, or modify any application files. All download links are provided by the respective app developers.</p>
-                <h2>Information Accuracy</h2>
-                <p>We strive to present accurate and up-to-date information. However, app names, images, bonus amounts, and download links may change over time. We recommend verifying details directly with the app's official source.</p>
-                <h2>Third-Party Applications</h2>
-                <p>The apps and games listed on AppHub are developed and operated by third parties. We are not affiliated with, endorsed by, or responsible for the content, functionality, or policies of any third-party application.</p>
-                <h2>User Responsibility</h2>
-                <p>Users are solely responsible for their use of any application downloaded or accessed through links provided on this platform. We encourage users to read each app's terms of service and privacy policy before installation.</p>
-                <h2>Real-Money Participation</h2>
-                <p>Some applications may involve real-money transactions or gaming. Participation in such activities is at your own risk. AppHub does not guarantee winnings, withdrawals, bonuses, or any financial outcomes. Please play responsibly and within your means.</p>
-                <h2>Platform Liability</h2>
-                <p>AppHub is provided on an "as is" basis. We disclaim all warranties, express or implied, regarding the accuracy, reliability, or suitability of the information presented. We are not liable for any damages arising from the use of our platform or third-party applications.</p>
+            <div class="static-page">
+                <h2>Disclaimer</h2>
+                <p>YONO Games is an informational directory and does not operate or host any gambling or gaming services. All third-party apps and websites listed are operated by independent entities.</p>
+                <p>Users are solely responsible for complying with their local laws and regulations regarding online gaming. YONO Games does not endorse or guarantee the legality of any app in your jurisdiction.</p>
+                <p>All bonus amounts, withdrawal limits, and terms are provided by the respective apps and may change without notice. Please verify directly with the app before engaging.</p>
+                <p>Gaming and gambling involve financial risk. Play responsibly and only with money you can afford to lose.</p>
             </div>
-            <footer class="footer">
-                <div class="footer-links">
-                    <a href="#" data-page="home">Home</a>
-                    <a href="#" data-page="about">About</a>
-                    <a href="#" data-page="contact">Contact</a>
-                    <a href="#" data-page="disclaimer">Disclaimer</a>
-                    <a href="#" data-page="privacy">Privacy</a>
-                </div>
-                <div class="footer-copy">© 2026 AppHub</div>
-            </footer>
         </section>
 
-        <!-- ── PRIVACY ── -->
+        <!-- ===== PRIVACY PAGE ===== -->
         <section class="page" id="page-privacy">
-            <div class="page-inner static-page">
-                <h1>Privacy Policy</h1>
-                <p>AppHub respects your privacy and is committed to protecting any information you may provide while using our platform.</p>
-                <h2>Information Collection</h2>
-                <p>We do not collect, store, or process any personal information from our users. AppHub is a static directory that does not require registration, login, or the submission of personal data.</p>
-                <h2>Usage Data</h2>
-                <p>Our platform may collect basic, non-identifiable usage data such as page views and click events to help us understand how users interact with the site. This data is aggregated and anonymized.</p>
-                <h2>Local Storage</h2>
-                <p>AppHub may use local storage or session storage to remember your preferences or navigation state. This data is stored locally on your device and is not transmitted to us.</p>
-                <h2>Third-Party Links</h2>
-                <p>Our platform contains links to third-party websites and applications. We are not responsible for the privacy practices or content of these external sites. We encourage you to review the privacy policies of any third-party apps you choose to use.</p>
-                <h2>Security</h2>
-                <p>We take reasonable measures to ensure the security of our platform. However, no method of transmission over the internet is 100% secure. We cannot guarantee the absolute security of any information transmitted through our site.</p>
-                <h2>Changes to This Policy</h2>
-                <p>We may update this privacy policy from time to time. Any changes will be posted on this page, and we encourage you to review it periodically.</p>
+            <div class="static-page">
+                <h2>Privacy <span>Policy</span></h2>
+                <p>YONO Games respects your privacy. We do not collect, store, or share any personal information from our users. No cookies are used for tracking or profiling.</p>
+                <p>When you click on a download or app link, you are redirected to the third-party app's website or APK. We do not have access to any data you provide to those platforms.</p>
+                <p>We use minimal analytics to understand site usage patterns, but this data is anonymous and cannot be traced back to individual users.</p>
+                <p>This policy is effective as of 2026 and may be updated from time to time. Continued use of the site constitutes acceptance of this policy.</p>
             </div>
-            <footer class="footer">
-                <div class="footer-links">
-                    <a href="#" data-page="home">Home</a>
-                    <a href="#" data-page="about">About</a>
-                    <a href="#" data-page="contact">Contact</a>
-                    <a href="#" data-page="disclaimer">Disclaimer</a>
-                    <a href="#" data-page="privacy">Privacy</a>
-                </div>
-                <div class="footer-copy">© 2026 AppHub</div>
-            </footer>
         </section>
+
+        <!-- ===== FOOTER ===== -->
+        <footer class="app-footer">
+            <div class="footer-links">
+                <a href="#" data-page="home">Home</a>
+                <a href="#" data-page="about">About</a>
+                <a href="#" data-page="contact">Contact</a>
+                <a href="#" data-page="disclaimer">Disclaimer</a>
+                <a href="#" data-page="privacy">Privacy</a>
+            </div>
+            <div class="footer-copy">&copy; 2026 YONO Games. All rights reserved.</div>
+        </footer>
 
     </main>
 
     <script>
-        // ─── DATA ───
-        // Exactly 74 original apps with names, images, bonuses (unique), and download links.
-        // Bonus amounts are unique per app, ranging from ₹85 to ₹699.
-        const appsData = [{
+        // ============================================================
+        // DATA — 74 APPS (exact original names, links, images)
+        // ============================================================
+        const APPS = [{
             id: 1,
             name: "YONO NEW APP",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/0RZPw4wH/Screenshot-20260814-093236.jpg",
-            bonus: "₹499",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 2,
             name: "567 SLOTS",
+            link: "https://join567slots0.com/?code=4NYF487URJ6&t=1781505684",
             image: "https://i.ibb.co/QWVBtNG/Screenshot-20260814-045334.jpg",
-            bonus: "₹450",
-            link: "https://join567slots0.com/?code=4NYF487URJ6&t=1781505684"
+            bonus: "51"
         }, {
             id: 3,
             name: "SAGA SLOTS",
+            link: "https://www.sagaslots5.com/?code=0QHJSERZYMV&t=1781505813",
             image: "https://i.ibb.co/k20yYCYZ/Screenshot-20260814-045747.jpg",
-            bonus: "₹475",
-            link: "https://www.sagaslots5.com/?code=0QHJSERZYMV&t=1781505813"
+            bonus: "51"
         }, {
             id: 4,
             name: "JAIHO 91",
+            link: "https://jaiho91bonus.vip/?code=C42T99ZQHAT&t=1781506067",
             image: "https://i.ibb.co/bnQfcCV/Screenshot-20260814-045233.jpg",
-            bonus: "₹520",
-            link: "https://jaiho91bonus.vip/?code=C42T99ZQHAT&t=1781506067"
+            bonus: "51"
         }, {
             id: 5,
             name: "RUMMY LUDO",
+            link: "https://rummyludoapp37.com/",
             image: "https://i.ibb.co/JR326qDL/Screenshot-20260814-050655.jpg",
-            bonus: "₹380",
-            link: "https://rummyludoapp37.com/"
+            bonus: "51"
         }, {
             id: 6,
             name: "ABC RUMMY",
+            link: "https://d34i569g8ztoql.cloudfront.net/abcrummy_MeApp.apk",
             image: "https://i.ibb.co/CKxFgdKB/Screenshot-20260814-050911.jpg",
-            bonus: "₹420",
-            link: "https://d34i569g8ztoql.cloudfront.net/abcrummy_MeApp.apk"
+            bonus: "51"
         }, {
             id: 7,
             name: "RUMMY 91",
+            link: "https://d16sfv4ssrmnvt.cloudfront.net/rummy91_AGENT.apk",
             image: "https://i.ibb.co/ymwjhMwy/Screenshot-20260814-051214.jpg",
-            bonus: "₹355",
-            link: "https://d16sfv4ssrmnvt.cloudfront.net/rummy91_AGENT.apk"
+            bonus: "51"
         }, {
             id: 8,
             name: "LOVE RUMMY",
+            link: "https://d34i569g8ztoql.cloudfront.net/loverummy_App.apk",
             image: "https://i.ibb.co/FkzpZCrk/Screenshot-20260814-051426.jpg",
-            bonus: "₹310",
-            link: "https://d34i569g8ztoql.cloudfront.net/loverummy_App.apk"
+            bonus: "51"
         }, {
             id: 9,
             name: "SPIN CRUSH",
+            link: "https://d292swwe9zki3u.cloudfront.net/spincrush_freecash.apk",
             image: "https://i.ibb.co/M5cLBLc1/Screenshot-20260814-034836.jpg",
-            bonus: "₹440",
-            link: "https://d292swwe9zki3u.cloudfront.net/spincrush_freecash.apk"
+            bonus: "51"
         }, {
             id: 10,
             name: "TOP RUMMY",
+            link: "https://th7.my/BY1JWS/3gvute0",
             image: "https://i.ibb.co/9mwHZbCp/Screenshot-20260814-051751.jpg",
-            bonus: "₹390",
-            link: "https://th7.my/BY1JWS/3gvute0"
+            bonus: "51"
         }, {
             id: 11,
             name: "Hello Rummy",
+            link: "https://www.earntp.com/gold/jm9n7r",
             image: "https://i.ibb.co/ksXtjTVp/Screenshot-20260814-052023.jpg",
-            bonus: "₹365",
-            link: "https://www.earntp.com/gold/jm9n7r"
+            bonus: "51"
         }, {
             id: 12,
             name: "RUMMY 365",
+            link: "https://join567slots0.com/?code=4NYF487URJ6&t=1781505684",
             image: "https://i.ibb.co/jvpGswXD/Screenshot-20260814-052223.jpg",
-            bonus: "₹425",
-            link: "https://join567slots0.com/?code=4NYF487URJ6&t=1781505684"
+            bonus: "51"
         }, {
             id: 13,
             name: "TEEN PATTI GOLD",
+            link: "https://www.earntp.com/gold/jm9n7r",
             image: "https://i.ibb.co/m5sHK3ys/Screenshot-20260814-052420.jpg",
-            bonus: "₹480",
-            link: "https://www.earntp.com/gold/jm9n7r"
+            bonus: "51"
         }, {
             id: 14,
             name: "TEEN PATTI MASTER",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/cXkXTDPR/Screenshot-20260814-052628.jpg",
-            bonus: "₹510",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 15,
             name: "YONO RUMMY",
+            link: "https://yonorummy043.com/?code=VIPYQC5EE9X&t=1781107758",
             image: "https://i.ibb.co/b5THXzC7/Screenshot-20260814-040920.jpg",
-            bonus: "₹460",
-            link: "https://yonorummy043.com/?code=VIPYQC5EE9X&t=1781107758"
+            bonus: "51"
         }, {
             id: 16,
             name: "SLOTS WINNER",
+            link: "https://slotswinneri.com/?code=PGVC6CBNF53&t=1781107393",
             image: "https://i.ibb.co/wNT5cZ1k/Screenshot-20260814-041656.jpg",
-            bonus: "₹530",
-            link: "https://slotswinneri.com/?code=PGVC6CBNF53&t=1781107393"
+            bonus: "51"
         }, {
             id: 17,
             name: "GOOD SLOTS",
+            link: "https://7sharegoodslots.vip?pid=320806209&channel=2010001&t=pdd2&pkg=com.1",
             image: "https://i.ibb.co/Hpk3dp9X/Screenshot-20260814-053030.jpg",
-            bonus: "₹400",
-            link: "https://7sharegoodslots.vip?pid=320806209&channel=2010001&t=pdd2&pkg=com.1"
+            bonus: "51"
         }, {
             id: 18,
             name: "Diwa Slot",
+            link: "https://sharediwaslot1.vip?pid=483455673&channel=2010002&t=pdd2&pkg=com.diwaslotwhl.app",
             image: "https://i.ibb.co/2zv2Nyy/Screenshot-20260814-053408.jpg",
-            bonus: "₹350",
-            link: "https://sharediwaslot1.vip?pid=483455673&channel=2010002&t=pdd2&pkg=com.diwaslotwhl.app"
+            bonus: "51"
         }, {
             id: 19,
             name: "GOGO RUMMY",
+            link: "https://www.gogorummyagent.com/?code=V4UTQA2VYMQ&t=1781196694",
             image: "https://i.ibb.co/RTwyQ4tF/Screenshot-20260814-053625.jpg",
-            bonus: "₹415",
-            link: "https://www.gogorummyagent.com/?code=V4UTQA2VYMQ&t=1781196694"
+            bonus: "51"
         }, {
             id: 20,
             name: "JOY RUMMY",
+            link: "https://www.joyrummymax.com/?code=J5KFTAWJ9X5&t=1781198100",
             image: "https://i.ibb.co/SCc42Cp/Screenshot-20260814-053827.jpg",
-            bonus: "₹395",
-            link: "https://www.joyrummymax.com/?code=J5KFTAWJ9X5&t=1781198100"
+            bonus: "51"
         }, {
             id: 21,
             name: "SPIN GOLD",
+            link: "https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828",
             image: "https://i.ibb.co/0yd0J3dy/Screenshot-20260814-030656.jpg",
-            bonus: "₹540",
-            link: "https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828"
+            bonus: "51"
         }, {
             id: 22,
             name: "BINGO 101",
+            link: "https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828",
             image: "https://i.ibb.co/Xk2wP9Nk/Screenshot-20260814-034121.jpg",
-            bonus: "₹370",
-            link: "https://uono-bingo101.com/?code=3WFQ231H9Y2&t=1781197828"
+            bonus: "51"
         }, {
             id: 23,
             name: "YES SPIN",
+            link: "https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907",
             image: "https://i.ibb.co/60hFLZzw/Screenshot-20260814-054324.jpg",
-            bonus: "₹435",
-            link: "https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907"
+            bonus: "51"
         }, {
             id: 24,
             name: "YONO ARCADE",
+            link: "https://yonoarcadeapk9.com/?code=96LNEL9FQXZ&t=1781199006",
             image: "https://i.ibb.co/R4hkwzbW/Screenshot-20260814-040720.jpg",
-            bonus: "₹490",
-            link: "https://yonoarcadeapk9.com/?code=96LNEL9FQXZ&t=1781199006"
+            bonus: "51"
         }, {
             id: 25,
             name: "SVIP 777",
+            link: "https://www.svip777.life?pid=297924008&channel=2050001&t=pdd2&pkg=com.svip777.h5",
             image: "https://i.ibb.co/MyQvt1R2/Screenshot-20260814-054554.jpg",
-            bonus: "₹560",
-            link: "https://www.svip777.life?pid=297924008&channel=2050001&t=pdd2&pkg=com.svip777.h5"
+            bonus: "51"
         }, {
             id: 26,
             name: "OK RUMMY",
+            link: "https://www.okrummy22.com/?code=H2GU92WUXXA&t=1781199220",
             image: "https://i.ibb.co/xKhB5qzg/Screenshot-20260814-054736.jpg",
-            bonus: "₹375",
-            link: "https://www.okrummy22.com/?code=H2GU92WUXXA&t=1781199220"
+            bonus: "51"
         }, {
             id: 27,
             name: "HINDI 777",
+            link: "https://www.hindi777agent5.com/?code=7LFFR8WPHEG&t=1781199307",
             image: "https://i.ibb.co/pvtCPtTT/Screenshot-20260814-055304.jpg",
-            bonus: "₹505",
-            link: "https://www.hindi777agent5.com/?code=7LFFR8WPHEG&t=1781199307"
+            bonus: "51"
         }, {
             id: 28,
             name: "BET 213",
+            link: "https://www.bet213.rocks/?code=2QTKPV4BYDH&t=1781199576",
             image: "https://i.ibb.co/6c3k7wdG/Screenshot-20260814-055545.jpg",
-            bonus: "₹445",
-            link: "https://www.bet213.rocks/?code=2QTKPV4BYDH&t=1781199576"
+            bonus: "51"
         }, {
             id: 29,
             name: "BOSS RUMMY",
+            link: "https://www.bossrummyy.com/?code=LSHTVUZE1NR&t=1781429504",
             image: "https://i.ibb.co/jvwscPDf/Screenshot-20260814-055812.jpg",
-            bonus: "₹410",
-            link: "https://www.bossrummyy.com/?code=LSHTVUZE1NR&t=1781429504"
+            bonus: "51"
         }, {
             id: 30,
             name: "YONO 777",
+            link: "https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388",
             image: "https://i.ibb.co/v4G1fQtr/Screenshot-20260814-060203.jpg",
-            bonus: "₹550",
-            link: "https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388"
+            bonus: "51"
         }, {
             id: 31,
             name: "Diwa VIP",
+            link: "https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388",
             image: "https://i.ibb.co/6RQ2tGnw/Screenshot-20260814-060417.jpg",
-            bonus: "₹465",
-            link: "https://uono777refer.vip/?code=F9MPSLKZCV9&t=1781429388"
+            bonus: "51"
         }, {
             id: 32,
             name: "Diwa 777",
+            link: "https://sharediwa7771.top?pid=287747863&channel=2010001&t=pdd2&pkg=com.diwa777.app",
             image: "https://i.ibb.co/hFNKBdvq/Screenshot-20260814-060707.jpg",
-            bonus: "₹485",
-            link: "https://sharediwa7771.top?pid=287747863&channel=2010001&t=pdd2&pkg=com.diwa777.app"
+            bonus: "51"
         }, {
             id: 33,
             name: "YONO GAMES",
+            link: "https://yonogamesm.com/?code=LHS49AEHVMR&t=1784314209",
             image: "https://i.ibb.co/Gf0fxYQ4/Screenshot-20260814-040510.jpg",
-            bonus: "₹520",
-            link: "https://yonogamesm.com/?code=LHS49AEHVMR&t=1784314209"
+            bonus: "51"
         }, {
             id: 34,
             name: "INR RUMMY",
+            link: "https://inrrummy.club/?code=JMQBV8TAPD7&t=1784298106",
             image: "https://i.ibb.co/hJpHMvPg/Screenshot-20260814-061018.jpg",
-            bonus: "₹430",
-            link: "https://inrrummy.club/?code=JMQBV8TAPD7&t=1784298106"
+            bonus: "51"
         }, {
             id: 35,
             name: "MBM BET",
+            link: "https://www.mbmbet3.com/?code=GD3H3VA6YK5&t=1784297830",
             image: "https://i.ibb.co/0j53Gb5W/Screenshot-20260814-042359.jpg",
-            bonus: "₹470",
-            link: "https://www.mbmbet3.com/?code=GD3H3VA6YK5&t=1784297830"
+            bonus: "51"
         }, {
             id: 36,
             name: "GOA SPIN",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/jkQ5z96x/Screenshot-20260814-033551.jpg",
-            bonus: "₹385",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 37,
             name: "777 GAME",
+            link: "https://t.me/yonogamestite",
             image: "https://i.ibb.co/tMJ0L7L8/1786658176260.jpg",
-            bonus: "₹495",
-            link: "https://t.me/yonogamestite"
+            bonus: "51"
         }, {
             id: 38,
             name: "TEEN PATTI",
+            link: "https://www.earntp.com/gold/jm9n7r",
             image: "https://i.ibb.co/fzmMFV0F/Screenshot-20260814-061532.jpg",
-            bonus: "₹360",
-            link: "https://www.earntp.com/gold/jm9n7r"
+            bonus: "51"
         }, {
             id: 39,
             name: "All YONO GAMES",
+            link: "https://www.earntp.com/gold/jm9n7r",
             image: "https://i.ibb.co/cKc56vJj/Screenshot-20260814-061719.jpg",
-            bonus: "₹525",
-            link: "https://www.earntp.com/gold/jm9n7r"
+            bonus: "51"
         }, {
             id: 40,
             name: "NEW YONO GAMES",
+            link: "https://t.me/yonogamestite",
             image: "https://i.ibb.co/R4hkwzbW/Screenshot-20260814-062237.jpg",
-            bonus: "₹540",
-            link: "https://t.me/yonogamestite"
+            bonus: "51"
         }, {
             id: 41,
             name: "YONO APPS",
+            link: "https://t.me/yonogamestite",
             image: "https://i.ibb.co/DfQgSYrP/Screenshot-20260814-061950.jpg",
-            bonus: "₹405",
-            link: "https://t.me/yonogamestite"
+            bonus: "51"
         }, {
             id: 42,
             name: "SPIN WINNER",
+            link: "https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907",
             image: "https://i.ibb.co/PZNRbCwk/Screenshot-20260814-034801.jpg",
-            bonus: "₹455",
-            link: "https://www.yesspineee.com/?code=47TXJTLU5YY&t=1781198907"
+            bonus: "51"
         }, {
             id: 43,
             name: "YONO All GAMES",
+            link: "https://diwavipshare.cc?pid=428256719&channel=2050001&t=pdd2&pkg=com.diwavip.h5",
             image: "https://i.ibb.co/TMJwF88r/Screenshot-20260814-031654.jpg",
-            bonus: "₹535",
-            link: "https://diwavipshare.cc?pid=428256719&channel=2050001&t=pdd2&pkg=com.diwavip.h5"
+            bonus: "51"
         }, {
             id: 44,
             name: "SPIN LUCKY",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/Q7YCZLWP/Screenshot-20260814-041943.jpg",
-            bonus: "₹340",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 45,
             name: "MAX RUMMY",
+            link: "https://www.maxrummy66.com/?code=QUMWTJCMZ5N&t=1784912540",
             image: "https://i.ibb.co/xKH8Zz6C/Screenshot-20260814-032014.jpg",
-            bonus: "₹470",
-            link: "https://www.maxrummy66.com/?code=QUMWTJCMZ5N&t=1784912540"
+            bonus: "51"
         }, {
             id: 46,
             name: "RANI SLOTS",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/jZMq58Pc/Screenshot-20260814-063312.jpg",
-            bonus: "₹390",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 47,
             name: "1GO PLUS",
+            link: "https://1go.plus/4h91q",
             image: "https://i.ibb.co/PzV7FRHT/Screenshot-20260814-063537.jpg",
-            bonus: "₹280",
-            link: "https://1go.plus/4h91q"
+            bonus: "51"
         }, {
             id: 48,
             name: "RUMMY ULTRA",
+            link: "https://www.rummyultraa.com/?dl=5hrw1p",
             image: "https://i.ibb.co/pjWGb0ty/Screenshot-20260814-034858.jpg",
-            bonus: "₹425",
-            link: "https://www.rummyultraa.com/?dl=5hrw1p"
+            bonus: "51"
         }, {
             id: 49,
             name: "789 JACKPOTS",
+            link: "https://join789jackpots1.com/?code=XYUGRMBA44Y&t=1784907944",
             image: "https://i.ibb.co/5WV6Z60y/Screenshot-20260814-063848.jpg",
-            bonus: "₹580",
-            link: "https://join789jackpots1.com/?code=XYUGRMBA44Y&t=1784907944"
+            bonus: "51"
         }, {
             id: 50,
             name: "JAIHO WIN",
+            link: "https://www.jaihowin12.com/?code=1XNCQVU3XA5&t=1784914695",
             image: "https://i.ibb.co/qFmG8b9q/Screenshot-20260814-041444.jpg",
-            bonus: "₹460",
-            link: "https://www.jaihowin12.com/?code=1XNCQVU3XA5&t=1784914695"
+            bonus: "51"
         }, {
             id: 51,
             name: "SLOTS SPIN",
+            link: "https://slotsspinq.com/?code=XJB6LEBYG8R&t=1784908638",
             image: "https://i.ibb.co/0pSskjBY/Screenshot-20260814-032904.jpg",
-            bonus: "₹440",
-            link: "https://slotsspinq.com/?code=XJB6LEBYG8R&t=1784908638"
+            bonus: "51"
         }, {
             id: 52,
             name: "NETA VIP",
+            link: "https://neta3.vip/?code=DR0V69R7BGJ&t=1784915088",
             image: "https://i.ibb.co/yBKhXW7S/Screenshot-20260814-032933.jpg",
-            bonus: "₹510",
-            link: "https://neta3.vip/?code=DR0V69R7BGJ&t=1784915088"
+            bonus: "51"
         }, {
             id: 53,
             name: "JAIHO 777 VIP",
+            link: "https://jaiho777agent.com?code=98X2D8Y3QGD&t=1784915217",
             image: "https://i.ibb.co/xVcCbWY/1786669966384.jpg",
-            bonus: "₹555",
-            link: "https://jaiho777agent.com?code=98X2D8Y3QGD&t=1784915217"
+            bonus: "51"
         }, {
             id: 54,
             name: "DHAN GAME",
+            link: "https://www.dhanwin365.com/?code=47TWH18LDKB&t=1784915487",
             image: "https://i.ibb.co/JRshnS3z/Screenshot-20260814-033641.jpg",
-            bonus: "₹415",
-            link: "https://www.dhanwin365.com/?code=47TWH18LDKB&t=1784915487"
+            bonus: "51"
         }, {
             id: 55,
             name: "DIWA GAME",
+            link: "https://diwagameshare.club?pid=345550936&channel=2010002&t=pdd2&pkg=com.diwagamewhx.app",
             image: "https://i.ibb.co/zVvgvPpL/Screenshot-20260814-040014.jpg",
-            bonus: "₹430",
-            link: "https://diwagameshare.club?pid=345550936&channel=2010002&t=pdd2&pkg=com.diwagamewhx.app"
+            bonus: "51"
         }, {
             id: 56,
             name: "BET 54 GAMES",
+            link: "https://www.earntp.com/gold/jm9n7r",
             image: "https://i.ibb.co/zWrDwLPt/Screenshot-20260814-033239.jpg",
-            bonus: "₹395",
-            link: "https://www.earntp.com/gold/jm9n7r"
+            bonus: "51"
         }, {
             id: 57,
             name: "ALL YONO APPS",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/Qq9Zn7f/Screenshot-20260814-064907.jpg",
-            bonus: "₹500",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 58,
             name: "T989 APPS",
+            link: "https://www.earntp.com/gold/jm9n7r",
             image: "https://i.ibb.co/bR8bB9qn/Screenshot-20260814-041927.jpg",
-            bonus: "₹320",
-            link: "https://www.earntp.com/gold/jm9n7r"
+            bonus: "51"
         }, {
             id: 59,
             name: "765 CLUB",
+            link: "https://765club.com/?id=637056077",
             image: "https://i.ibb.co/LDF3sXTx/Screenshot-20260814-065302.jpg",
-            bonus: "₹475",
-            link: "https://765club.com/?id=637056077"
+            bonus: "51"
         }, {
             id: 60,
             name: "MKM BET APK",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/wZxK5XGr/Screenshot-20260814-032720.jpg",
-            bonus: "₹345",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 61,
             name: "YN 777",
+            link: "https://www.y729.com/?code=4SWD98JQ8LU&t=1785588919",
             image: "https://i.ibb.co/v6GbHJ95/Screenshot-20260814-040445.jpg",
-            bonus: "₹490",
-            link: "https://www.y729.com/?code=4SWD98JQ8LU&t=1785588919"
+            bonus: "51"
         }, {
             id: 62,
             name: "SPIN 777",
+            link: "https://spin777cc.com/?code=7V9ZG91PA4R&t=1785589035",
             image: "https://i.ibb.co/ccGr69gJ/Screenshot-20260814-033520.jpg",
-            bonus: "₹455",
-            link: "https://spin777cc.com/?code=7V9ZG91PA4R&t=1785589035"
+            bonus: "51"
         }, {
             id: 63,
             name: "RUMMY 888",
+            link: "https://rummy888vip43.com/?code=7WTEEW87DPM&t=1785589166",
             image: "https://i.ibb.co/bMgzZNPd/Screenshot-20260814-033315.jpg",
-            bonus: "₹410",
-            link: "https://rummy888vip43.com/?code=7WTEEW87DPM&t=1785589166"
+            bonus: "51"
         }, {
             id: 64,
             name: "RUMMY 77",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/BXKxwDX/Screenshot-20260814-035041.jpg",
-            bonus: "₹355",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 65,
             name: "MQM BET",
+            link: "https://4mqmshare.vip?pid=486385025&channel=2010001&pkg=com.mqm.bet",
             image: "https://i.ibb.co/nqbdMSST/Screenshot-20260814-035011.jpg",
-            bonus: "₹365",
-            link: "https://4mqmshare.vip?pid=486385025&channel=2010001&pkg=com.mqm.bet"
+            bonus: "51"
         }, {
             id: 66,
             name: "MAHA GAMES",
+            link: "https://good-mahagames.com/?code=J24U9DHRWR8&t=1785589525",
             image: "https://i.ibb.co/nNmMgR25/Screenshot-20260814-034026.jpg",
-            bonus: "₹480",
-            link: "https://good-mahagames.com/?code=J24U9DHRWR8&t=1785589525"
+            bonus: "51"
         }, {
             id: 67,
             name: "IND RUMMY",
+            link: "https://www.earntp.com/m/jm9n7r",
             image: "https://i.ibb.co/BKSZbZMt/Screenshot-20260814-091502.jpg",
-            bonus: "₹405",
-            link: "https://www.earntp.com/m/jm9n7r"
+            bonus: "51"
         }, {
             id: 68,
             name: "Hi RUMMY",
+            link: "https://joinhirummy.net/?code=RX35XQBCPC9&t=1785590074",
             image: "https://i.ibb.co/27r99T47/Screenshot-20260814-091836.jpg",
-            bonus: "₹380",
-            link: "https://joinhirummy.net/?code=RX35XQBCPC9&t=1785590074"
+            bonus: "51"
         }, {
             id: 69,
             name: "JAIHO SPIN",
+            link: "https://18jaihospinpro.com/?code=U3VDD22Q&t=1785590326",
             image: "https://i.ibb.co/rfc5rdpv/Screenshot-20260814-041105.jpg",
-            bonus: "₹460",
-            link: "https://18jaihospinpro.com/?code=U3VDD22Q&t=1785590326"
+            bonus: "51"
         }, {
             id: 70,
             name: "JAIHO RUMMY",
+            link: "https://jaihoclud.com/?code=E744HJRF6W7&t=1785590487",
             image: "https://i.ibb.co/TD7mQ4Qw/Screenshot-20260814-035539.jpg",
-            bonus: "₹435",
-            link: "https://jaihoclud.com/?code=E744HJRF6W7&t=1785590487"
+            bonus: "51"
         }, {
             id: 71,
             name: "YONO SLOTS",
+            link: "https://www.yonoslotsm.com/?code=KU899FV2GFY&t=1785590595",
             image: "https://i.ibb.co/TDF7VJ1w/Screenshot-20260814-092416.jpg",
-            bonus: "₹500",
-            link: "https://www.yonoslotsm.com/?code=KU899FV2GFY&t=1785590595"
+            bonus: "51"
         }, {
             id: 72,
             name: "Diwa Win",
+            link: "https://diwawinshare.tech?pid=528544053&channel=2010002&pkg=com.diwawin002.app",
             image: "https://i.ibb.co/XfXsfDrh/Screenshot-20260814-032430.jpg",
-            bonus: "₹330",
-            link: "https://diwawinshare.tech?pid=528544053&channel=2010002&pkg=com.diwawin002.app"
+            bonus: "51"
         }, {
             id: 73,
             name: "RUMBLE RUMMY",
+            link: "https://www.rumblerummy111.vip/?code=VX9H1GEM5EL&t=1785590916",
             image: "https://i.ibb.co/S7VgC8Cr/Screenshot-20260814-035804.jpg",
-            bonus: "₹445",
-            link: "https://www.rumblerummy111.vip/?code=VX9H1GEM5EL&t=1785590916"
+            bonus: "51"
         }, {
             id: 74,
             name: "YONO VIP",
+            link: "https://uonovipfast.com/?code=3crTKB9H7ND&t=1785591034",
             image: "https://i.ibb.co/zTH4HqXT/Screenshot-20260814-041418.jpg",
-            bonus: "₹560",
-            link: "https://uonovipfast.com/?code=3crTKB9H7ND&t=1785591034"
+            bonus: "51"
         }];
 
-        // ─── UNIQUE DOWNLOAD NUMBERS, SIZES, VOTES ───
-        const downloadNumbers = [
-            "45,309+", "52,841+", "68,220+", "91,740+", "37,512+",
-            "73,890+", "28,415+", "61,234+", "84,672+", "19,837+",
-            "56,128+", "42,763+", "79,451+", "33,896+", "67,234+",
-            "48,571+", "92,380+", "24,619+", "58,742+", "71,305+",
-            "39,468+", "63,897+", "86,124+", "27,543+", "54,786+",
-            "76,231+", "31,459+", "69,872+", "44,615+", "82,397+",
-            "36,284+", "59,743+", "78,126+", "23,958+", "65,489+",
-            "41,376+", "88,521+", "29,634+", "52,847+", "74,190+",
-            "35,762+", "62,583+", "81,469+", "26,315+", "57,938+",
-            "43,672+", "89,254+", "32,781+", "66,435+", "47,823+",
-            "75,614+", "38,297+", "83,546+", "49,172+", "64,389+",
-            "55,876+", "72,543+", "28,976+", "58,234+", "41,867+",
-            "77,315+", "34,629+", "63,782+", "46,591+", "82,453+",
-            "37,268+", "59,147+", "73,826+", "25,493+", "56,728+",
-            "68,495+", "44,839+", "79,261+", "51,307+"
-        ];
-        const appSizes = [
-            "18.6 MB", "24.2 MB", "31.8 MB", "42.5 MB", "15.3 MB",
-            "28.7 MB", "22.1 MB", "35.9 MB", "19.4 MB", "26.8 MB",
-            "33.2 MB", "14.7 MB", "29.5 MB", "38.6 MB", "21.3 MB",
-            "34.8 MB", "27.4 MB", "16.9 MB", "32.1 MB", "25.7 MB",
-            "39.4 MB", "23.6 MB", "30.2 MB", "36.5 MB", "20.8 MB",
-            "41.3 MB", "17.5 MB", "33.9 MB", "28.2 MB", "37.1 MB",
-            "22.9 MB", "35.4 MB", "26.3 MB", "19.8 MB", "32.7 MB",
-            "24.5 MB", "38.2 MB", "21.6 MB", "34.3 MB", "29.8 MB",
-            "16.4 MB", "31.5 MB", "27.9 MB", "23.2 MB", "36.8 MB",
-            "30.5 MB", "18.9 MB", "33.6 MB", "25.4 MB", "37.9 MB",
-            "22.4 MB", "35.1 MB", "28.6 MB", "20.3 MB", "32.9 MB",
-            "26.7 MB", "38.8 MB", "17.8 MB", "34.7 MB", "29.3 MB",
-            "24.8 MB", "36.2 MB", "21.9 MB", "33.4 MB", "27.6 MB",
-            "39.1 MB", "23.5 MB", "35.7 MB", "30.4 MB", "25.9 MB",
-            "37.6 MB", "22.6 MB", "34.9 MB", "28.3 MB"
-        ];
-        const voteNumbers = [
-            "12,480+", "18,932+", "25,640+", "32,875+", "9,146+",
-            "21,563+", "15,728+", "29,314+", "8,927+", "23,456+",
-            "17,839+", "31,672+", "14,258+", "27,493+", "20,615+",
-            "34,281+", "11,936+", "26,547+", "19,382+", "30,764+",
-            "13,629+", "28,815+", "22,193+", "35,476+", "16,548+",
-            "24,371+", "33,826+", "10,284+", "29,657+", "18,436+",
-            "27,928+", "15,183+", "32,649+", "22,814+", "19,275+",
-            "30,538+", "14,692+", "26,413+", "21,837+", "33,572+",
-            "17,946+", "28,391+", "23,058+", "31,724+", "16,835+",
-            "25,619+", "34,472+", "12,357+", "29,846+", "18,729+",
-            "27,518+", "22,163+", "32,894+", "15,642+", "26,985+",
-            "20,437+", "33,219+", "14,876+", "28,543+", "23,791+",
-            "31,486+", "17,258+", "27,635+", "21,974+", "34,128+",
-            "16,392+", "29,067+", "24,815+", "30,392+", "19,543+",
-            "28,764+", "22,539+", "33,817+", "15,928+"
+        // ============================================================
+        // A-to-Z TAGS — EXACTLY UNCHANGED (preserved from original design)
+        // ============================================================
+        const TAGS = [
+            "All Games", "Bonus", "Casino", "Download", "Easy Win", "Free Spin",
+            "Game", "High Bonus", "Instant", "Jackpot", "King", "Lucky",
+            "Money", "New", "Online", "Play", "Quick", "Rummy",
+            "Slots", "Teen Patti", "Ultimate", "VIP", "Win", "Extra",
+            "Yono", "Zero"
         ];
 
-        // ─── CATEGORY DETECTION ───
-        function detectCategory(name) {
-            const n = name.toLowerCase();
-            if (n.includes('slot')) return 'slots';
-            if (n.includes('rummy')) return 'rummy';
-            if (n.includes('teen') || n.includes('patti')) return 'teenpatti';
-            if (n.includes('bingo')) return 'bingo';
-            if (n.includes('spin')) return 'spin';
-            if (n.includes('game') || n.includes('games')) return 'games';
-            if (n.includes('bet')) return 'bet';
-            if (n.includes('777')) return 'casino';
-            if (n.includes('arcade')) return 'arcade';
-            if (n.includes('ludo')) return 'ludo';
-            if (n.includes('jackpot')) return 'jackpot';
-            return 'general';
+        // ============================================================
+        // SVG ICONS (inline)
+        // ============================================================
+        const ICONS = {
+            gift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>`,
+            wallet: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/><circle cx="18" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg>`,
+            download: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+            back: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>`,
+            home: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>`
+        };
+
+        // ============================================================
+        // RENDER HELPERS
+        // ============================================================
+        function getAppById(id) {
+            return APPS.find(a => a.id === id);
         }
 
-        // ─── CONTENT GENERATORS ───
-        function generateInfoText(app) {
-            const cat = detectCategory(app.name);
-            const pool = {
-                slots: [
-                    `${app.name} offers a vibrant slot experience with multiple reels, exciting themes, and smooth animations. Players can enjoy a variety of slot mechanics including free spins, bonus rounds, and progressive jackpots. The interface is designed for easy navigation, allowing players to adjust bet sizes and spin the reels with a single tap. The game features high-quality visual effects and immersive soundscapes that enhance the overall gaming session.`,
-                    `Step into the world of ${app.name}, where slot gaming meets modern design. With a wide selection of themes ranging from classic fruit machines to adventure-packed video slots, there's something for every player. The game includes auto-spin functionality, detailed paytables, and real-time win notifications. The user-friendly layout ensures that both new and experienced players can jump right into the action.`,
-                    `${app.name} brings the excitement of a real casino to your mobile device. The slot collection features dynamic reels, wild symbols, scatter bonuses, and multipliers that keep every spin thrilling. The game's smooth performance and responsive controls make it a top choice for slot enthusiasts looking for quality entertainment on the go.`
-                ],
-                rummy: [
-                    `${app.name} delivers a classic rummy experience with smooth card dealing, intuitive drag-and-drop mechanics, and fast-paced gameplay. Players can join tables with varying stake levels and compete against real opponents in real-time. The game supports multiple formats including points, pool, and deals rummy, ensuring a diverse and engaging experience for all skill levels.`,
-                    `Enjoy the timeless card game of rummy with ${app.name}. The app features beautifully designed virtual cards, clear table layouts, and smart AI opponents for practice mode. Real-time multiplayer matches allow you to challenge friends or players from around the world. With quick matchmaking and secure gameplay, ${app.name} is a reliable choice for rummy lovers.`,
-                    `${app.name} redefines mobile rummy with its polished interface, responsive controls, and vibrant community. The game includes detailed statistics, player profiles, and daily challenges that keep the experience fresh. Whether you prefer quick games or extended sessions, ${app.name} offers a comfortable and competitive environment.`
-                ],
-                teenpatti: [
-                    `${app.name} brings the excitement of Teen Patti to your fingertips with authentic gameplay and social features. Players can join tables, bluff their way to victory, and enjoy the thrill of high-stakes rounds. The game includes both classic and modern variations, with live dealers and interactive chat options that replicate the feel of a real casino.`,
-                    `Experience the traditional Indian card game with ${app.name}. The app offers a sleek interface, smooth card animations, and multiple betting options. Whether you're a beginner or a seasoned player, ${app.name} provides a welcoming and competitive environment. The game also features daily bonuses and loyalty rewards for regular players.`,
-                    `${app.name} is the ultimate Teen Patti destination on mobile. With its engaging gameplay, vibrant graphics, and seamless online multiplayer, it captures the essence of the popular card game. The app includes private tables, tournament modes, and a comprehensive leaderboard system that adds a competitive edge.`
-                ],
-                spin: [
-                    `${app.name} is all about the thrill of the spin. With a variety of wheel-based games and slot-style mechanics, players can test their luck and enjoy fast-paced action. The app features vibrant visuals, smooth animations, and a user-friendly interface that makes spinning both fun and accessible.`,
-                    `Get ready to spin your way to fun with ${app.name}. The app offers a range of spinning games, each with unique themes and reward structures. The controls are simple and responsive, making it easy for players of all ages to enjoy. Whether you're in it for the excitement or the potential rewards, ${app.name} delivers a solid experience.`,
-                    `${app.name} combines the thrill of spinning with engaging game mechanics. The app features multiple game modes, each offering different levels of challenge and entertainment. With its clean design and smooth performance, ${app.name} provides a satisfying mobile gaming experience.`
-                ],
-                bingo: [
-                    `${app.name} brings the classic game of Bingo to your mobile device with a modern twist. Players can enjoy multiple bingo rooms, each with different ticket prices and prize pools. The app features auto-daub, chat functionality, and live game hosts that make every session feel like a real bingo hall.`,
-                    `Join the fun with ${app.name}, the ultimate bingo app for mobile players. With a variety of game modes, themed rooms, and daily jackpots, there's always something exciting happening. The app's clean interface and smooth performance ensure a pleasant gaming experience for all players.`,
-                    `${app.name} offers a premium bingo experience with high-quality graphics, engaging sound effects, and a friendly community. Players can compete in real-time, chat with fellow bingo enthusiasts, and track their progress with detailed statistics. The app is designed for both casual and serious bingo players.`
-                ],
-                bet: [
-                    `${app.name} provides a comprehensive betting platform with a wide range of options for sports and gaming enthusiasts. The app features live odds, real-time updates, and a secure environment for placing bets. With its intuitive design and fast loading times, ${app.name} makes it easy to stay engaged with your favorite games.`,
-                    `Experience the excitement of betting with ${app.name}. The app offers a variety of betting markets, competitive odds, and a user-friendly interface that simplifies the betting process. Whether you're a seasoned bettor or new to the scene, ${app.name} provides a reliable and enjoyable platform.`,
-                    `${app.name} is designed for players who enjoy the thrill of betting. The app features a sleek design, live score updates, and multiple payment options for seamless transactions. With its focus on user experience and security, ${app.name} is a trusted choice for betting enthusiasts.`
-                ],
-                casino: [
-                    `${app.name} delivers a premium casino experience with a wide selection of games including slots, table games, and live dealer options. The app features high-quality graphics, smooth animations, and a user-friendly interface that replicates the feel of a real casino. Players can enjoy a safe and fair gaming environment.`,
-                    `Step into the world of ${app.name}, where casino gaming meets mobile convenience. The app offers a diverse range of games, from classic slots to modern video poker, all with stunning visuals and responsive controls. The platform is designed for both casual players and high rollers.`,
-                    `${app.name} is your gateway to a world of casino entertainment. With a rich selection of games, generous promotions, and a secure platform, the app provides an immersive and trustworthy experience. The intuitive navigation and fast load times make it easy to find and enjoy your favorite games.`
-                ],
-                games: [
-                    `${app.name} offers a diverse collection of games designed to entertain and engage. From action-packed adventures to brain-teasing puzzles, the app has something for every type of player. The interface is clean and intuitive, making it easy to browse and select games that suit your mood.`,
-                    `Discover a world of gaming with ${app.name}. The app brings together a variety of game genres, each with its own unique mechanics and visual style. Whether you're looking for a quick time-killer or an immersive experience, ${app.name} has you covered. The app is regularly updated with new content.`,
-                    `${app.name} is a one-stop destination for mobile gaming. The app features a curated selection of games, each carefully designed to provide a satisfying experience. With its smooth performance, engaging gameplay, and user-friendly design, ${app.name} is a great choice for gamers of all ages.`
-                ],
-                general: [
-                    `${app.name} is a versatile mobile application that offers a range of features designed to enhance your mobile experience. The app's intuitive interface and smooth performance make it easy to navigate and enjoy. Whether you're using it for entertainment or utility, ${app.name} delivers reliable functionality.`,
-                    `Explore the capabilities of ${app.name}, a well-designed app that combines functionality with user-friendly design. The app offers a seamless experience with fast loading times and responsive controls. With its clean layout and thoughtful features, ${app.name} is a valuable addition to your mobile device.`,
-                    `${app.name} stands out with its polished design and reliable performance. The app provides a smooth user experience with intuitive navigation and quick access to key features. Whether you're a new user or a long-time fan, ${app.name} offers a satisfying and hassle-free experience.`
-                ]
-            };
-            const catPool = pool[cat] || pool.general;
-            return catPool[Math.floor(Math.random() * catPool.length)] || `${app.name} offers a well-designed mobile experience with smooth performance and an intuitive interface. The app provides reliable functionality and is optimized for a seamless user experience. Whether you're using it for leisure or productivity, ${app.name} is a solid choice.`;
-        }
+        function renderAppCard(app, showDetailBtn = true) {
+            const btnLabel = showDetailBtn ? 'View Details' : 'Download';
+            const btnAction = showDetailBtn ?
+                `onclick="showDetails(${app.id})"` :
+                `onclick="window.open('${app.link}','_blank')"`;
+            const btnIcon = showDetailBtn ? ICONS.download : ICONS.download;
 
-        function generateAboutText(app) {
-            const cat = detectCategory(app.name);
-            const pool = {
-                slots: [
-                    `About ${app.name} — ${app.name} is a modern slot game designed for mobile players who enjoy thrilling reels and engaging bonus features. The app offers a variety of themed slot machines, each with unique symbols, paylines, and special features. The user interface is clean and responsive, allowing players to adjust bets, spin the reels, and track their winnings effortlessly. The game also includes a comprehensive help section that explains the rules and payout structures clearly. With its vibrant graphics and immersive sound design, ${app.name} provides an authentic casino-style experience on the go. Players can enjoy both free-play and real-money modes, catering to different preferences. The app is optimized for smooth performance across a wide range of Android devices.`,
-                    `About ${app.name} — ${app.name} brings the excitement of slot gaming to mobile with a focus on quality visuals and engaging gameplay. The app features a rich collection of slot machines, each with its own theme, bonus rounds, and progressive jackpots. The interface is designed for easy navigation, with clear buttons and real-time feedback on every spin. Whether you're a casual player or a slot enthusiast, ${app.name} offers a diverse and entertaining experience. The app also includes daily challenges, free spin bonuses, and loyalty rewards that keep players coming back for more.`,
-                    `About ${app.name} — ${app.name} is a premium slot app that combines classic slot mechanics with modern features. The game includes multiple reel configurations, adjustable bet sizes, and a variety of special symbols like wilds, scatters, and multipliers. The user experience is enhanced by smooth animations, responsive controls, and detailed game statistics. ${app.name} also offers regular updates with new slot machines and seasonal events, ensuring that the content remains fresh and exciting for all players.`
-                ],
-                rummy: [
-                    `About ${app.name} — ${app.name} is a feature-rich rummy app that brings the classic card game to mobile devices with a modern touch. The app supports multiple rummy formats, including points rummy, pool rummy, and deals rummy, catering to players of all skill levels. The interface is clean and intuitive, with smooth card animations, easy drag-and-drop mechanics, and clear game statistics. Players can join public tables or create private rooms to play with friends. The app also includes a practice mode where beginners can learn the ropes without risking real money. With its robust matchmaking system and fair play policies, ${app.name} ensures a secure and enjoyable experience for all users.`,
-                    `About ${app.name} — ${app.name} is a comprehensive rummy platform designed for mobile users who love the thrill of card games. The app offers a seamless gaming experience with fast matchmaking, smooth gameplay, and a variety of table options. The interface is user-friendly, with clear menus, detailed game rules, and real-time opponent interactions. ${app.name} also features daily tournaments, leaderboards, and a rewards system that adds a competitive edge to the gameplay. The app is optimized for both beginners and experienced rummy players.`,
-                    `About ${app.name} — ${app.name} is a dedicated rummy app that focuses on delivering a high-quality card gaming experience. The app includes a wide range of features, such as multiplayer modes, AI practice, and customizable table settings. The design is clean and modern, with easy-to-read cards and smooth transitions between game states. ${app.name} also provides detailed tutorials and tips for new players, making it accessible to everyone. The app is regularly updated with new features and improvements based on user feedback.`
-                ],
-                teenpatti: [
-                    `About ${app.name} — ${app.name} is a premier Teen Patti app that brings the excitement of India's favorite card game to your mobile device. The app offers a realistic and immersive experience with live dealers, interactive chat, and multiple game variations. Players can join tables of various stakes, compete in tournaments, and enjoy a social gaming environment. The interface is designed for easy navigation, with clear card displays, responsive controls, and real-time updates on game progress. ${app.name} also includes a comprehensive guide to Teen Patti rules and strategies, making it accessible to both new and experienced players. The app is optimized for smooth performance and fair play.`,
-                    `About ${app.name} — ${app.name} is a high-quality Teen Patti app that combines traditional card game mechanics with modern mobile features. The app includes a variety of game modes, including classic, joker, and muflis variations, providing a diverse gaming experience. The user interface is intuitive, with clean graphics and responsive touch controls. Players can enjoy private tables, chat with opponents, and track their stats across multiple sessions. ${app.name} also offers daily bonuses and promotions that add extra value to the gaming experience.`,
-                    `About ${app.name} — ${app.name} is a trusted Teen Patti platform that offers a secure and engaging environment for card game enthusiasts. The app features a sleek design, smooth animations, and a variety of table options to suit different player preferences. ${app.name} includes a detailed tutorial section, practice mode, and real-time matchmaking that ensures a hassle-free experience. The app is regularly updated with new features and improvements, keeping the gameplay fresh and exciting.`
-                ],
-                spin: [
-                    `About ${app.name} — ${app.name} is a dynamic spin-based game that offers a variety of exciting challenges and rewards. The app features multiple spin modes, each with its own theme and prize structure. The interface is clean and responsive, with smooth animations and clear feedback on every spin. Players can enjoy a range of game options, from simple wheel spins to more complex multi-level spin challenges. ${app.name} is designed for both casual play and competitive gaming, with leaderboards and achievements that add a layer of motivation. The app is optimized for all Android devices, ensuring a smooth and enjoyable experience.`,
-                    `About ${app.name} — ${app.name} brings the thrill of spinning to mobile with a focus on fun and engagement. The app includes a variety of spin-based games, each with unique mechanics and visual styles. The user interface is intuitive, with easy-to-use controls and clear game progress indicators. ${app.name} also includes bonus rounds and daily rewards that keep the experience fresh and rewarding. Whether you're spinning for fun or chasing high scores, ${app.name} offers an enjoyable and addictive experience.`,
-                    `About ${app.name} — ${app.name} is a polished spin game that offers a premium mobile experience. The app features high-quality graphics, immersive sound effects, and a variety of game modes that cater to different player preferences. The controls are responsive and the animations are smooth, creating a satisfying feedback loop for every spin. ${app.name} also includes social features that allow players to compete with friends and share their achievements.`
-                ],
-                bingo: [
-                    `About ${app.name} — ${app.name} is a complete bingo app that offers a lively and engaging experience for players of all ages. The app features multiple bingo rooms, each with different ticket prices and prize pools, ensuring a variety of options for every player. The interface is clean and easy to navigate, with clear displays for numbers, tickets, and game progress. ${app.name} includes auto-daub functionality, chat features, and live game hosts that create a social and interactive atmosphere. The app is optimized for smooth performance and offers regular updates with new rooms and events.`,
-                    `About ${app.name} — ${app.name} is a feature-rich bingo platform designed for mobile users who enjoy the classic game with a modern twist. The app offers a wide range of game modes, from traditional 75-ball to 90-ball bingo, as well as themed variations. The user interface is vibrant and intuitive, with real-time updates and engaging visual effects. ${app.name} also includes daily jackpots, loyalty rewards, and community events that make every session exciting.`,
-                    `About ${app.name} — ${app.name} delivers a premium bingo experience with a focus on quality and community. The app features high-quality graphics, immersive sound design, and a variety of game rooms to choose from. The controls are simple and responsive, making it easy to manage multiple tickets and track your progress. ${app.name} also includes detailed statistics, player profiles, and a robust chat system that enhances the social aspect of the game.`
-                ],
-                bet: [
-                    `About ${app.name} — ${app.name} is a comprehensive betting app that offers a wide range of options for sports and gaming enthusiasts. The app features live odds, real-time updates, and a secure environment for placing bets on your favorite games. The interface is designed for quick navigation, with clear menus, detailed statistics, and easy bet placement. ${app.name} also includes multiple payment options, transaction history, and account management features that make it convenient to use. The app is regularly updated with new markets and features.`,
-                    `About ${app.name} — ${app.name} is a trusted betting platform that provides a seamless and enjoyable experience for users. The app offers competitive odds, live score updates, and a wide range of betting markets across various sports and events. The user interface is clean and responsive, with intuitive controls that make it easy to place bets and manage your account. ${app.name} also includes a comprehensive help section and customer support for any queries.`,
-                    `About ${app.name} — ${app.name} is a modern betting app that combines functionality with a user-friendly design. The app features a variety of betting options, live streaming capabilities, and detailed analytics to help users make informed decisions. The interface is optimized for mobile use, with fast loading times and smooth navigation. ${app.name} also offers promotions and bonuses that add value to the betting experience.`
-                ],
-                casino: [
-                    `About ${app.name} — ${app.name} is a premium casino app that offers a diverse selection of games including slots, table games, and live dealer options. The app features high-quality graphics, smooth animations, and an immersive sound experience that replicates the feel of a physical casino. The interface is designed for easy navigation, with clear categories and quick access to favorite games. ${app.name} also includes a secure payment system, detailed game history, and responsible gaming tools that ensure a safe and enjoyable experience for all players.`,
-                    `About ${app.name} — ${app.name} is a comprehensive casino platform that brings the excitement of Las Vegas to your mobile device. The app offers a wide range of games, from classic slots to modern video poker, all with stunning visuals and responsive controls. The user interface is intuitive, with easy-to-use menus, real-time balance updates, and detailed game information. ${app.name} also includes regular promotions, loyalty rewards, and a VIP program that adds extra value for dedicated players.`,
-                    `About ${app.name} — ${app.name} is a trusted casino app that prioritizes user experience and security. The app features a rich game library, fair play policies, and a transparent system that ensures all games are conducted fairly. The interface is clean and modern, with smooth transitions and clear game information. ${app.name} also includes a comprehensive support system, including live chat and detailed FAQs, to assist players with any questions.`
-                ],
-                games: [
-                    `About ${app.name} — ${app.name} is a versatile gaming app that offers a diverse collection of games across multiple genres. From action and adventure to puzzle and strategy, the app has something for every type of player. The interface is designed for easy browsing, with clear categories, detailed game descriptions, and user ratings. ${app.name} also includes social features that allow players to share achievements and challenge friends. The app is regularly updated with new games and features.`,
-                    `About ${app.name} — ${app.name} is a curated gaming platform that brings together the best mobile games in one convenient app. The app features a wide variety of games, each with its own unique mechanics and visual style. The user interface is clean and intuitive, making it easy to discover new games and revisit old favorites. ${app.name} also includes personalized recommendations and a game library that tracks your progress across titles.`,
-                    `About ${app.name} — ${app.name} is a comprehensive gaming app that offers a rich and engaging experience for players of all ages. The app features a diverse game library, smooth performance, and regular updates that keep the content fresh. The interface is user-friendly, with easy navigation and quick access to your favorite games. ${app.name} also includes community features, leaderboards, and achievements that add a competitive element to the gaming experience.`
-                ],
-                general: [
-                    `About ${app.name} — ${app.name} is a well-designed mobile application that offers a range of features to enhance your mobile experience. The app is built with a focus on usability and performance, providing a smooth and responsive interface that is easy to navigate. Whether you're using ${app.name} for entertainment, productivity, or utility, the app delivers reliable functionality with a clean and modern design. The app is optimized for Android devices and receives regular updates to improve performance and add new features.`,
-                    `About ${app.name} — ${app.name} is a versatile app that combines functionality with a polished user interface. The app offers a seamless experience with intuitive controls, fast loading times, and responsive feedback. ${app.name} is designed to be accessible to users of all skill levels, with clear instructions and helpful tooltips that guide you through each feature. The app is regularly maintained and updated to ensure compatibility with the latest Android versions.`,
-                    `About ${app.name} — ${app.name} is a premium mobile app that stands out for its design and performance. The app features a clean layout, smooth transitions, and a range of useful features that make it a valuable tool for daily use. ${app.name} is built with a focus on user satisfaction, with a responsive support team and regular updates that incorporate user feedback. The app is compatible with a wide range of Android devices and offers a consistent experience across different screen sizes.`
-                ]
-            };
-            const catPool = pool[cat] || pool.general;
-            return catPool[Math.floor(Math.random() * catPool.length)] || `About ${app.name} — ${app.name} is a carefully designed mobile application that offers a reliable and engaging user experience. The app features an intuitive interface, smooth performance, and a range of functionalities that cater to a wide audience. Whether you're a first-time user or a regular, ${app.name} provides a consistent and enjoyable experience. The app is optimized for Android devices and receives regular updates to maintain its quality and performance.`;
-        }
-
-        // ─── ACCORDION CONTENT ───
-        function getAccordionData(app) {
-            const name = app.name;
-            return [{
-                heading: "🎮 Gameplay & Experience",
-                icon: "game",
-                content: `${name} offers an engaging and interactive experience that keeps players coming back for more. The app is designed with smooth controls, responsive feedback, and a user-friendly interface that makes it easy to dive into the action. Whether you're a casual player or a dedicated enthusiast, ${name} provides a satisfying and enjoyable experience. The game mechanics are well-balanced, offering a fair and entertaining challenge for players of all skill levels. The visual and audio elements are carefully crafted to create an immersive environment that enhances the overall gameplay.`
-            }, {
-                heading: "🧭 Navigation & Interface",
-                icon: "navigation",
-                content: `The interface of ${name} is designed with simplicity and efficiency in mind. The main menu provides quick access to all key features, while the in-game controls are intuitive and responsive. Clear visual cues and well-organized layouts ensure that players can navigate the app effortlessly. The design prioritizes usability, with touch-friendly buttons and a clean aesthetic that reduces clutter and focuses on the content. Whether you're accessing settings, viewing statistics, or jumping into a game, ${name} makes every interaction smooth and straightforward.`
-            }, {
-                heading: "📲 Download & Setup",
-                icon: "download",
-                content: `Getting started with ${name} is quick and easy. Simply tap the download button on the details page to access the official APK or download link provided by the developer. Once downloaded, install the app on your Android device by following the on-screen instructions. The installation process is straightforward and typically takes only a few moments. After installation, open the app and follow the initial setup steps to start enjoying all the features ${name} has to offer. For a seamless experience, ensure your device meets the minimum requirements and has sufficient storage space.`
-            }, {
-                heading: "⚖️ Responsible Use",
-                icon: "shield",
-                content: `At AppHub, we encourage responsible use of all applications. ${name} is designed for entertainment purposes, and we remind users to enjoy it in a balanced and mindful way. Set time limits, take regular breaks, and avoid spending beyond your means. If you ever feel that your usage is becoming problematic, seek support from professional resources. Remember that while ${name} offers exciting features and potential rewards, the primary goal is to have fun. Play responsibly and always prioritize your well-being.`
-            }];
-        }
-
-        // ─── REVIEWS ───
-        function getReviews(app) {
-            const name = app.name;
-            const cat = detectCategory(name);
-            const reviewTemplates = {
-                slots: [
-                    { text: `I've been playing ${name} for a few weeks now and the variety of slot machines is impressive. The graphics are sharp and the bonus rounds keep things exciting. Definitely one of the better slot apps I've tried.`, name: 'Rahul S.', initials: 'RS' },
-                    { text: `The interface of ${name} is very user-friendly. I love how easy it is to switch between different games and adjust my bets. The sound effects add to the overall experience.`, name: 'Priya M.', initials: 'PM' },
-                    { text: `Visually, ${name} is stunning. The themes are creative and the animations are smooth. I also appreciate the regular updates that add new content.`, name: 'Amit K.', initials: 'AK' },
-                    { text: `Responsive controls and fast loading times make ${name} a pleasure to play. I've had no lag or crashes, which is great for a mobile slot game.`, name: 'Sneha R.', initials: 'SR' },
-                    { text: `${name} has become my go-to slot app. The variety of games and the fair payout system keep me coming back. Highly recommended for slot fans.`, name: 'Vikram P.', initials: 'VP' }
-                ],
-                rummy: [
-                    { text: `${name} offers a fantastic rummy experience. The card dealing is smooth, and the multiplayer matches are always competitive. I've improved my rummy skills a lot playing here.`, name: 'Ananya D.', initials: 'AD' },
-                    { text: `I love the clean layout of ${name}. The tables are easy to read and the controls are very intuitive. It's a great app for both beginners and experienced players.`, name: 'Karan J.', initials: 'KJ' },
-                    { text: `The graphics in ${name} are simple yet elegant. The cards are easy to see and the game flows naturally. A well-designed rummy app.`, name: 'Neha G.', initials: 'NG' },
-                    { text: `${name} runs smoothly on my device. The matchmaking is quick and I've never experienced any lag during gameplay. Very reliable app.`, name: 'Ravi T.', initials: 'RT' },
-                    { text: `I enjoy playing ${name} regularly. The community is friendly and the daily tournaments add an extra layer of excitement. Definitely a top rummy app.`, name: 'Meera S.', initials: 'MS' }
-                ],
-                teenpatti: [
-                    { text: `${name} brings the real Teen Patti experience to mobile. The live dealer feature and chat options make it feel like I'm at a real table.`, name: 'Arjun N.', initials: 'AN' },
-                    { text: `The interface of ${name} is clean and easy to use. I love the different game variations and the ability to play with friends in private rooms.`, name: 'Divya K.', initials: 'DK' },
-                    { text: `${name} has impressive graphics and smooth animations. The cards are clear and the table layout is very realistic. A premium Teen Patti app.`, name: 'Sanjay P.', initials: 'SP' },
-                    { text: `Responsive controls and fast gameplay make ${name} a joy to play. I've had no issues with connectivity or performance. Great job by the developers.`, name: 'Pooja R.', initials: 'PR' },
-                    { text: `${name} is my favorite Teen Patti app. The tournaments are exciting and the rewards system is generous. I highly recommend it to card game lovers.`, name: 'Gaurav M.', initials: 'GM' }
-                ],
-                spin: [
-                    { text: `${name} offers a thrilling spinning experience. The variety of games keeps me entertained for hours. The animations are smooth and the rewards are satisfying.`, name: 'Suresh L.', initials: 'SL' },
-                    { text: `I love the design of ${name}. It's colorful and vibrant, with clear game indicators. The controls are very responsive.`, name: 'Anjali B.', initials: 'AB' },
-                    { text: `The visual effects in ${name} are top-notch. Each spin feels exciting and the game feedback is instant. A very polished app.`, name: 'Deepak C.', initials: 'DC' },
-                    { text: `${name} runs flawlessly on my device. No crashes or slowdowns, even during intense gameplay. Very reliable.`, name: 'Kavita S.', initials: 'KS' },
-                    { text: `I've tried many spin games and ${name} is by far the best. The variety and quality of games are outstanding. Highly recommended.`, name: 'Rohit G.', initials: 'RG' }
-                ],
-                general: [
-                    { text: `${name} is a well-designed app that offers a great user experience. The interface is intuitive and the features are easy to access. I'm impressed with the overall quality.`, name: 'Aisha K.', initials: 'AK' },
-                    { text: `I enjoy using ${name} regularly. The app is responsive and the navigation is smooth. It's clear that the developers put a lot of thought into the design.`, name: 'Manish T.', initials: 'MT' },
-                    { text: `${name} has a clean and modern look. The layout is well-organized and everything works as expected. A reliable app for daily use.`, name: 'Sunita R.', initials: 'SR' },
-                    { text: `The performance of ${name} is excellent. It loads quickly and runs smoothly without any hiccups. A great app overall.`, name: 'Rajesh P.', initials: 'RP' },
-                    { text: `${name} exceeded my expectations. The features are comprehensive and the user experience is top-notch. I'm very satisfied with this app.`, name: 'Neelam D.', initials: 'ND' }
-                ]
-            };
-            const catReviews = reviewTemplates[cat] || reviewTemplates.general;
-            // Ensure exactly 5 reviews, with unique names
-            const colors = ['', 'bg2', 'bg3', 'bg4', 'bg5'];
-            return catReviews.map((r, idx) => ({ ...r, bg: colors[idx % colors.length] }));
-        }
-
-        // ─── RENDER FUNCTIONS ───
-        function renderHome() {
-            const grid = document.getElementById('homeGrid');
-            grid.innerHTML = '';
-            appsData.forEach(app => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-              <div class="card-badge">${app.id}</div>
-              <div class="card-img-wrap">
-                <img src="${app.image}" alt="${app.name}" loading="lazy" />
-              </div>
-              <div class="card-name">${app.name}</div>
-              <div class="card-info">
-                <div class="card-info-row">
-                  <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span>Sign Up Bonus <span class="bonus-amount">${app.bonus}</span></span>
-                </div>
-                <div class="card-info-row">
-                  <svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                  <span>Min. Withdrawal ₹100</span>
-                </div>
-              </div>
-              <button class="card-btn" data-id="${app.id}">
-                <svg viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                Download
-              </button>
-            `;
-                const btn = card.querySelector('.card-btn');
-                btn.addEventListener('click', () => showDetails(app.id));
-                grid.appendChild(card);
-            });
-        }
-
-        function showDetails(id) {
-            const app = appsData.find(a => a.id === id);
-            if (!app) return;
-            const container = document.getElementById('detailsContainer');
-            const idx = app.id - 1;
-            const downloadNum = downloadNumbers[idx] || '10,000+';
-            const size = appSizes[idx] || '20.0 MB';
-            const votes = voteNumbers[idx] || '5,000+';
-
-            const related = appsData.filter(a => a.id !== id);
-            const cat = detectCategory(app.name);
-            const infoText = generateInfoText(app);
-            const aboutText = generateAboutText(app);
-            const accordions = getAccordionData(app);
-            const reviews = getReviews(app);
-
-            let relatedHTML = '';
-            related.forEach(a => {
-                relatedHTML += `
-              <div class="related-card">
+            return `
+            <div class="app-card" data-id="${app.id}">
+              <div class="card-top">
+                <span class="number-badge">${app.id}</span>
                 <div class="card-img-wrap">
-                  <img src="${a.image}" alt="${a.name}" loading="lazy" />
+                  <img src="${app.image}" alt="${app.name}" loading="lazy" />
                 </div>
-                <div class="card-name">${a.name}</div>
-                <div class="card-info">
-                  <div class="card-info-row">
-                    <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/></svg>
-                    <span>Bonus <span class="bonus-amount">${a.bonus}</span></span>
-                  </div>
-                  <div class="card-info-row">
-                    <svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="currentColor" stroke-width="2"/></svg>
-                    <span>Min. ₹100</span>
-                  </div>
+                <span class="card-name">${app.name}</span>
+              </div>
+              <div class="card-body">
+                <div class="info-row">
+                  ${ICONS.gift}
+                  <span>Sign Up Bonus <span class="bonus-text">₹${app.bonus}</span></span>
                 </div>
-                <button class="card-btn" data-id="${a.id}">View</button>
-              </div>
-            `;
-            });
-
-            let accordionHTML = '';
-            accordions.forEach((item, i) => {
-                const iconMap = {
-                    game: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/>',
-                    navigation: '<path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2"/>',
-                    download: '<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" stroke="currentColor" stroke-width="2"/>',
-                    shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/>'
-                };
-                const iconPath = iconMap[item.icon] || iconMap.game;
-                accordionHTML += `
-              <div class="accordion-item">
-                <div class="accordion-head" data-acc="${i}">
-                  <h4><svg viewBox="0 0 24 24">${iconPath}</svg> ${item.heading}</h4>
-                  <svg class="acc-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                <div class="info-row">
+                  ${ICONS.wallet}
+                  <span class="min-text">Min. Withdrawal ₹100</span>
                 </div>
-                <div class="accordion-body" data-accbody="${i}">
-                  <p>${item.content}</p>
-                </div>
-              </div>
-            `;
-            });
-
-            let reviewsHTML = '';
-            reviews.forEach((r, i) => {
-                const stars = Array(5).fill('<svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" fill="#F59E0B"/></svg>').join('');
-                reviewsHTML += `
-              <div class="review-card">
-                <div class="review-stars">${stars}</div>
-                <div class="review-text">"${r.text}"</div>
-                <div class="review-author">
-                  <div class="review-avatar ${r.bg}">${r.initials}</div>
-                  <div class="review-name-wrap">
-                    <div class="review-name">
-                      ${r.name}
-                      <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#16A34A" stroke-width="2" stroke-linecap="round"/></svg>
-                    </div>
-                    <div class="review-verified">Verified Gamer</div>
-                  </div>
-                </div>
-              </div>
-            `;
-            });
-
-            container.innerHTML = `
-            <!-- Back -->
-            <button class="back-btn" id="backFromDetails">
-              <svg viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-              Back
-            </button>
-
-            <!-- Top -->
-            <div class="details-top">
-              <div class="details-img-wrap">
-                <img src="${app.image}" alt="${app.name}" />
-              </div>
-              <div class="details-title">${app.name}</div>
-              <div class="details-meta">
-                <div class="details-meta-item">
-                  <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/></svg>
-                  <span>Sign Up Bonus <span class="bonus-amount">${app.bonus}</span></span>
-                </div>
-                <div class="details-meta-item">
-                  <svg viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="currentColor" stroke-width="2"/></svg>
-                  <span>Min. Withdrawal ₹100</span>
-                </div>
-              </div>
-              <div class="details-stats">
-                <span><svg viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" stroke="currentColor" stroke-width="2"/></svg> ${downloadNum} Downloads</span>
-                <span><svg viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2"/></svg> ${size}</span>
-                <span><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2"/></svg> ${votes} Votes</span>
-              </div>
-              <a href="${app.link}" target="_blank" rel="noopener noreferrer" class="details-download-btn">
-                <svg viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4-4m0 0l-4 4m4-4v12" stroke="currentColor" stroke-width="2"/></svg>
-                Download ${app.name}
-              </a>
-            </div>
-
-            <!-- Info Bag -->
-            <div class="info-bag">
-              <h3><svg viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2"/></svg> About ${app.name}</h3>
-              <p>${infoText}</p>
-              <p>${aboutText}</p>
-            </div>
-
-            <!-- Related -->
-            <div class="related-section">
-              <h2>All Other Apps &amp; Games</h2>
-              <div class="related-grid" id="relatedGrid">
-                ${relatedHTML}
-              </div>
-            </div>
-
-            <!-- Best Information / Accordion -->
-            <div class="related-section">
-              <h2>Best Information</h2>
-              <div class="accordion-wrap">
-                ${accordionHTML}
-              </div>
-            </div>
-
-            <!-- Reviews -->
-            <div class="reviews-section">
-              <h2>Ratings &amp; Player Reviews</h2>
-              <div class="reviews-scroll" id="reviewsScroll">
-                ${reviewsHTML}
+                <button class="download-btn" ${btnAction} aria-label="View ${app.name}">
+                  ${btnIcon}
+                  ${btnLabel}
+                </button>
               </div>
             </div>
           `;
+        }
 
-            // Related card click
-            container.querySelectorAll('#relatedGrid .card-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = parseInt(btn.dataset.id);
-                    if (id) showDetails(id);
+        function renderTags() {
+            return TAGS.map(t => `<span class="tag">${t}</span>`).join('');
+        }
+
+        // ============================================================
+        // HOME PAGE
+        // ============================================================
+        function renderHome() {
+            const container = document.getElementById('homeAppList');
+            container.innerHTML = APPS.map(app => renderAppCard(app, true)).join('');
+        }
+
+        // ============================================================
+        // DETAILS PAGE
+        // ============================================================
+        function showDetails(id) {
+            const app = getAppById(id);
+            if (!app) return;
+
+            const container = document.getElementById('detailsContent');
+            const related = APPS.filter(a => a.id !== id);
+
+            let html = `
+            <div class="details-card">
+              <div class="detail-img-wrap">
+                <img src="${app.image}" alt="${app.name}" />
+              </div>
+              <div class="detail-name">${app.name}</div>
+              <div class="detail-info">
+                <div class="info-row">
+                  ${ICONS.gift}
+                  <span>Sign Up Bonus <span class="bonus-text">₹${app.bonus}</span></span>
+                </div>
+                <div class="info-row">
+                  ${ICONS.wallet}
+                  <span>Min. Withdrawal ₹100</span>
+                </div>
+              </div>
+              <button class="detail-download-btn" onclick="window.open('${app.link}','_blank')" aria-label="Download ${app.name}">
+                ${ICONS.download}
+                Download ${app.name}
+              </button>
+            </div>
+
+            <div class="tags-section">
+              <div class="tags-title">🏷️ A–Z Tags</div>
+              <div class="tags-wrap">${renderTags()}</div>
+            </div>
+
+            <div class="related-title">Other <span>Games</span> &amp; Apps</div>
+            <div id="relatedAppList">
+              ${related.map(r => renderAppCard(r, true)).join('')}
+            </div>
+          `;
+
+            container.innerHTML = html;
+
+            // Switch to details page
+            showPage('details');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Push state for back navigation
+            history.pushState({ page: 'details', id: id }, '', `#details-${id}`);
+        }
+
+        // ============================================================
+        // PAGE NAVIGATION
+        // ============================================================
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById(`page-${pageId}`);
+            if (target) target.classList.add('active');
+            // Close menu
+            closeMenu();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goHome() {
+            showPage('home');
+            history.pushState({ page: 'home' }, '', '#home');
+        }
+
+        // ============================================================
+        // MENU
+        // ============================================================
+        function openMenu() {
+            document.getElementById('menuPanel').classList.add('open');
+            document.getElementById('menuOverlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            document.getElementById('menuPanel').classList.remove('open');
+            document.getElementById('menuOverlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // ============================================================
+        // EVENT BINDING
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // Render home
+            renderHome();
+
+            // Menu open/close
+            document.getElementById('menuOpenBtn').addEventListener('click', openMenu);
+            document.getElementById('menuCloseBtn').addEventListener('click', closeMenu);
+            document.getElementById('menuOverlay').addEventListener('click', closeMenu);
+
+            // Menu items
+            document.querySelectorAll('.menu-item[data-page]').forEach(item => {
+                item.addEventListener('click', function(e) {
+                    const page = this.dataset.page;
+                    if (page === 'home') {
+                        goHome();
+                    } else {
+                        showPage(page);
+                        history.pushState({ page: page }, '', `#${page}`);
+                    }
+                    closeMenu();
                 });
             });
 
-            // Accordion
-            container.querySelectorAll('.accordion-head').forEach(head => {
-                head.addEventListener('click', () => {
-                    const idx = head.dataset.acc;
-                    const body = container.querySelector(`[data-accbody="${idx}"]`);
-                    const icon = head.querySelector('.acc-icon');
-                    if (body) {
-                        body.classList.toggle('open');
-                        icon.classList.toggle('open');
+            // Footer links
+            document.querySelectorAll('.footer-links a[data-page]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = this.dataset.page;
+                    if (page === 'home') {
+                        goHome();
+                    } else {
+                        showPage(page);
+                        history.pushState({ page: page }, '', `#${page}`);
                     }
                 });
             });
 
-            // Back
-            container.querySelector('#backFromDetails').addEventListener('click', () => {
-                navigateTo('home');
+            // Details back button
+            document.getElementById('detailsBackBtn').addEventListener('click', goHome);
+
+            // Browser back/forward
+            window.addEventListener('popstate', function(e) {
+                const state = e.state;
+                if (!state) {
+                    goHome();
+                    return;
+                }
+                if (state.page === 'home') {
+                    goHome();
+                } else if (state.page === 'details' && state.id) {
+                    showDetails(state.id);
+                } else if (state.page) {
+                    showPage(state.page);
+                } else {
+                    goHome();
+                }
             });
 
-            // Scroll reviews
-            const scroll = container.querySelector('#reviewsScroll');
-            if (scroll) {
-                let isDown = false;
-                let startX = 0;
-                let scrollLeft = 0;
-                scroll.addEventListener('mousedown', (e) => { isDown = true;
-                    startX = e.pageX - scroll.offsetLeft;
-                    scrollLeft = scroll.scrollLeft; });
-                scroll.addEventListener('mouseleave', () => { isDown = false; });
-                scroll.addEventListener('mouseup', () => { isDown = false; });
-                scroll.addEventListener('mousemove', (e) => {
-                    if (!isDown) return;
-                    e.preventDefault();
-                    const x = e.pageX - scroll.offsetLeft;
-                    const walk = (x - startX) * 1.5;
-                    scroll.scrollLeft = scrollLeft - walk;
-                });
+            // Handle initial hash on load
+            const hash = window.location.hash;
+            if (hash.startsWith('#details-')) {
+                const id = parseInt(hash.replace('#details-', ''));
+                if (id) showDetails(id);
+            } else if (hash === '#home' || hash === '') {
+                goHome();
+            } else if (hash) {
+                const page = hash.replace('#', '');
+                if (['about', 'contact', 'disclaimer', 'privacy'].includes(page)) {
+                    showPage(page);
+                }
             }
 
-            navigateTo('details');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ─── NAVIGATION ───
-        function navigateTo(page) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(`page-${page}`);
-            if (target) target.classList.add('active');
-            // Close drawer
-            closeDrawer();
-            // Update URL hash
-            if (page === 'home') history.pushState(null, '', '#home');
-            else if (page === 'details') history.pushState(null, '', '#details');
-            else history.pushState(null, '', `#${page}`);
-        }
-
-        // ─── DRAWER ───
-        function openDrawer() {
-            document.getElementById('drawer').classList.add('open');
-            document.getElementById('drawerOverlay').classList.add('open');
-        }
-
-        function closeDrawer() {
-            document.getElementById('drawer').classList.remove('open');
-            document.getElementById('drawerOverlay').classList.remove('open');
-        }
-
-        document.getElementById('menuBtn').addEventListener('click', openDrawer);
-        document.getElementById('drawerClose').addEventListener('click', closeDrawer);
-        document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
-
-        // Drawer navigation
-        document.querySelectorAll('.drawer-nav a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.dataset.page;
-                if (page) navigateTo(page);
-            });
+            // Expose showDetails globally
+            window.showDetails = showDetails;
+            window.goHome = goHome;
         });
 
-        // Footer nav
-        document.querySelectorAll('.footer-links a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = link.dataset.page;
-                if (page) navigateTo(page);
-            });
-        });
-
-        // ─── INIT ───
-        renderHome();
-
-        // Handle hash on load
-        const hash = window.location.hash.replace('#', '');
-        if (hash && ['home', 'about', 'contact', 'disclaimer', 'privacy'].includes(hash)) {
-            navigateTo(hash);
-        } else {
-            navigateTo('home');
-        }
-
-        // ─── BACK BUTTON (browser) ───
-        window.addEventListener('popstate', () => {
-            const h = window.location.hash.replace('#', '');
-            if (h && ['home', 'about', 'contact', 'disclaimer', 'privacy'].includes(h)) {
-                navigateTo(h);
-            } else if (h === 'details') {
-                // Stay on details
-            } else {
-                navigateTo('home');
-            }
-        });
-
-        console.log('✅ AppHub loaded — 74 original apps.');
+        // ============================================================
+        // PREVENT DOUBLE TAP ZOOM ON MOBILE (optional)
+        // ============================================================
+        document.addEventListener('touchend', function(e) {
+            const now = Date.now();
+            if (now - (document.lastTouch || 0) < 300) e.preventDefault();
+            document.lastTouch = now;
+        }, { passive: false });
     </script>
 
 </body>
